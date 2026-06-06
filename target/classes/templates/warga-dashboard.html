@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Warga - SmartPelayanan</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="top-navbar">
+        <div class="nav-brand">
+            <i class="fas fa-building brand-icon"></i>
+            <div class="brand-text">
+                <h2>SmartPelayanan</h2>
+                <p>Sistem Informasi Publik</p>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a class="nav-link active" onclick="showSection('dashboard')" id="nav-dashboard">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </a>
+            <a class="nav-link" onclick="showSection('pengaduan')" id="nav-pengaduan">
+                <i class="fas fa-exclamation-circle"></i> Pengaduan Saya
+            </a>
+            <a class="nav-link" onclick="showSection('layanan')" id="nav-layanan">
+                <i class="fas fa-file-alt"></i> Layanan Administrasi
+            </a>
+        </div>
+        <div class="nav-actions">
+            <!-- Notification Dropdown -->
+            <div style="position:relative;cursor:pointer" onclick="toggleNotifDropdown()">
+                <i class="fas fa-bell" style="font-size:20px;color:#64748b;transition:color 0.2s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#64748b'"></i>
+                <span id="notifBadge" style="display:none;position:absolute;top:-6px;right:-6px;background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;box-shadow:0 0 10px rgba(239, 68, 68, 0.3)">0</span>
+            </div>
+            
+            <div id="notifDropdown" style="display:none;position:absolute;top:60px;right:200px;width:340px;background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,0.1);z-index:1000;max-height:400px;overflow-y:auto">
+                <div style="padding:12px 16px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#ffffff;z-index:10;">
+                    <strong style="font-size:14px;color:#1e293b">Notifikasi</strong>
+                    <button onclick="markAllRead()" style="background:none;border:none;color:#2563eb;cursor:pointer;font-size:12px;transition:color 0.2s;font-weight:500;" onmouseover="this.style.color='#1e40af'" onmouseout="this.style.color='#2563eb'">Tandai semua dibaca</button>
+                </div>
+                <div id="notifList" style="padding:0">
+                    <div style="text-align:center;padding:20px;color:#64748b;font-size:13px">Memuat...</div>
+                </div>
+            </div>
+
+            <!-- User Profile -->
+            <div class="user-profile">
+                <div class="user-avatar" id="userAvatarNav">W</div>
+                <div class="user-info-nav">
+                    <span id="wargaName">Warga</span>
+                    <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+            </div>
+            
+            <button class="btn-keluar" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Keluar
+            </button>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="page-header">
+            <h1 id="pageTitle">Dashboard</h1>
+            <p>Selamat datang di SmartPelayanan. Kelola pengaduan dan layanan Anda dengan mudah.</p>
+        </div>
+        
+        <div id="dashboardSection" class="section-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon blue"><i class="fas fa-file-alt"></i></div>
+                        <div class="stat-info">
+                            <h3>Total Pengaduan</h3>
+                            <div class="number" id="totalPengaduanVal">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card-footer">
+                        <p>Jumlah pengaduan yang pernah Anda buat</p>
+                        <div class="stat-arrow blue" onclick="showSection('pengaduan')"><i class="fas fa-arrow-right"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon green"><i class="fas fa-briefcase"></i></div>
+                        <div class="stat-info">
+                            <h3>Total Layanan</h3>
+                            <div class="number green" id="totalLayananVal">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card-footer">
+                        <p>Permohonan layanan yang telah diajukan</p>
+                        <div class="stat-arrow green" onclick="showSection('layanan')"><i class="fas fa-arrow-right"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon orange"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-info">
+                            <h3>Total Beres</h3>
+                            <div class="number orange" id="totalBeresVal">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card-footer">
+                        <p>Pengaduan & layanan yang sudah selesai</p>
+                        <div class="stat-arrow orange"><i class="fas fa-check"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon purple"><i class="fas fa-th-large"></i></div>
+                        <div class="stat-info">
+                            <h3>Kategori Layanan</h3>
+                            <div class="number purple" id="totalKategoriVal">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card-footer">
+                        <p>Jenis layanan yang tersedia untuk Anda</p>
+                        <div class="stat-arrow purple"><i class="fas fa-arrow-right"></i></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h2>Pengaduan Terbaru</h2>
+                        <button class="btn" style="padding: 6px 12px; font-size: 12px;" onclick="showSection('pengaduan')">Lihat Semua</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Judul</th>
+                                    <th>Tgl Kejadian</th>
+                                    <th>Prioritas</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashboardPengaduanTable">
+                                <tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">Memuat...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-header">
+                        <h2>Layanan Terbaru</h2>
+                        <button class="btn" style="padding: 6px 12px; font-size: 12px;" onclick="showSection('layanan')">Lihat Semua</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Keperluan</th>
+                                    <th>Tanggal</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashboardLayananTable">
+                                <tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">Memuat...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="pengaduanSection" class="section-content" style="display:none;">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Daftar Pengaduan</h2>
+                    <button class="btn btn-primary" onclick="showPengaduanModal()">
+                        <i class="fas fa-plus"></i> Buat Pengaduan
+                    </button>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Judul</th>
+                                <th>Lokasi</th>
+                                <th>Tanggal</th>
+                                <th>Prioritas</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pengaduanFullTable">
+                            <tr><td colspan="6" style="text-align:center;padding:20px;color:#6b7280;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination-container">
+                        <div class="pagination-info" id="pengaduanPaginationInfo">Menampilkan 0 dari 0 pengaduan</div>
+                        <div class="pagination-controls" id="pengaduanPaginationControls"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="layananSection" class="section-content" style="display:none;">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Daftar Layanan Administrasi</h2>
+                    <button class="btn btn-primary" onclick="showLayananModal()">
+                        <i class="fas fa-plus"></i> Ajukan Layanan
+                    </button>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No. Permohonan</th>
+                                <th>Kategori</th>
+                                <th>Keperluan</th>
+                                <th>Tanggal</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="layananFullTable">
+                            <tr><td colspan="6" style="text-align:center;padding:20px;color:#6b7280;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination-container">
+                        <div class="pagination-info" id="layananPaginationInfo">Menampilkan 0 dari 0 permohonan</div>
+                        <div class="pagination-controls" id="layananPaginationControls"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pengaduan Modal -->
+    <div class="modal" id="pengaduanModal">
+        <div class="modal-content" style="width: 600px; max-width: 95vw;">
+            <div class="modal-header">
+                <h3>Ajukan Pengaduan</h3>
+                <button class="modal-close" onclick="closeModal('pengaduanModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Judul Pengaduan</label>
+                    <input type="text" id="pengaduanJudul" placeholder="Masukkan judul pengaduan">
+                </div>
+                <div class="form-group">
+                    <label>Deskripsi</label>
+                    <textarea id="pengaduanDeskripsi" rows="4" placeholder="Jelaskan detail pengaduan"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Lokasi</label>
+                    <input type="text" id="pengaduanLokasi" placeholder="Masukkan lokasi kejadian">
+                </div>
+                <div class="form-group">
+                    <label>Prioritas</label>
+                    <select id="pengaduanPrioritas">
+                        <option value="RENDAH">Rendah</option>
+                        <option value="SEDANG" selected>Sedang</option>
+                        <option value="TINGGI">Tinggi</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Lampiran File (opsional, maks 5 file, 10MB/file)</label>
+                    <input type="file" id="pengaduanFiles" multiple accept="image/*,video/*,.pdf,.doc,.docx" style="padding:8px">
+                    <small style="color:#666;font-size:12px">Format: jpg, png, gif, mp4, avi, pdf, doc, docx</small>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn" style="background: #e1e1e1;" onclick="closeModal('pengaduanModal')">Batal</button>
+                <button class="btn btn-primary" onclick="submitPengaduan()">Kirim</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Layanan Modal -->
+    <div class="modal" id="layananModal">
+        <div class="modal-content" style="width: 600px; max-width: 95vw;">
+            <div class="modal-header">
+                <h3>Ajukan Layanan Baru</h3>
+                <button class="modal-close" onclick="closeModal('layananModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Pilih Jenis Layanan <span style="color:#ef4444">*</span></label>
+                    <select id="layananKategori" onchange="onKategoriChange()">
+                        <option value="">Pilih jenis layanan</option>
+                    </select>
+                </div>
+                
+                <div id="dynamicFormFields"></div>
+                
+                <div class="form-group">
+                    <label>Keperluan / Deskripsi <span style="color:#ef4444">*</span></label>
+                    <textarea id="layananKeperluan" rows="4" placeholder="Jelaskan keperluan Anda secara detail..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Lampiran Dokumen (Opsional)</label>
+                    <div class="file-drop-area">
+                        <i class="fas fa-upload"></i>
+                        <p>Klik untuk unggah file<br>PDF, JPG, PNG (Maks. 5MB)</p>
+                    </div>
+                    <small style="color:#9ca3af;font-size:11px;margin-top:4px;display:block">Maksimal 5 dokumen</small>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn" style="background: #e1e1e1;" onclick="closeModal('layananModal')">Batal</button>
+                <button class="btn btn-primary" id="btnSubmitLayanan" onclick="submitLayanan()">Ajukan Layanan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Pengaduan -->
+    <div class="modal" id="detailPengaduanModal">
+        <div class="modal-content" style="width:700px;max-width:95vw">
+            <div class="modal-header">
+                <h3>Detail Pengaduan</h3>
+                <button class="modal-close" onclick="closeModal('detailPengaduanModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="detailPengaduanBody" style="max-height:70vh;overflow-y:auto">
+                <div style="text-align:center;padding:30px;color:#999">Memuat...</div>
+            </div>
+            <div class="modal-actions" style="display:flex;gap:8px;justify-content:space-between;">
+                <div>
+                    <button class="btn btn-primary" onclick="exportPengaduanPdf()" id="btnDownloadPdfPengaduan" style="display:none;">
+                        <i class="fas fa-file-pdf"></i> Unduh Laporan (PDF)
+                    </button>
+                </div>
+                <button class="btn" style="background:#e1e1e1" onclick="closeModal('detailPengaduanModal')">Tutup</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Detail Layanan -->
+    <div class="modal" id="detailLayananModal">
+        <div class="modal-content" style="width:700px;max-width:95vw">
+            <div class="modal-header">
+                <h3>Detail Layanan</h3>
+                <button class="modal-close" onclick="closeModal('detailLayananModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="detailLayananBody" style="max-height:70vh;overflow-y:auto">
+                <div style="text-align:center;padding:30px;color:#999">Memuat...</div>
+            </div>
+            <div class="modal-actions" style="display:flex;gap:8px;justify-content:space-between;">
+                <div>
+                    <button class="btn btn-primary" onclick="exportLayananPdf()" id="btnDownloadPdfLayanan" style="display:none;">
+                        <i class="fas fa-file-pdf"></i> Unduh Laporan (PDF)
+                    </button>
+                </div>
+                <button class="btn" style="background:#e1e1e1" onclick="closeModal('detailLayananModal')">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox untuk zoom foto -->
+    <div class="lightbox" id="lightboxModal" onclick="if(event.target===this) closeLightbox()">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <img id="lightboxImg" src="" alt="Foto Bukti">
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
+        
+        if (!token || role !== 'WARGA') {
+            window.location.href = '/login';
+        }
+        
+        const namaLengkap = localStorage.getItem('namaLengkap') || 'Warga';
+        if(document.getElementById('wargaName')) document.getElementById('wargaName').textContent = namaLengkap;
+        if(document.getElementById('userAvatarNav')) document.getElementById('userAvatarNav').textContent = namaLengkap[0];
+        
+        let allPengaduan = [];
+        let allLayanan = [];
+        
+        // Load data on page load
+        loadData();
+        
+        function showSection(section) {
+            document.querySelectorAll('.nav-link').forEach(m => m.classList.remove('active'));
+            const activeNav = document.getElementById('nav-' + section);
+            if(activeNav) activeNav.classList.add('active');
+            
+            document.getElementById('dashboardSection').style.display = 'none';
+            document.getElementById('pengaduanSection').style.display = 'none';
+            document.getElementById('layananSection').style.display = 'none';
+            
+            const titles = {
+                'dashboard': 'Dashboard',
+                'pengaduan': 'Pengaduan Saya',
+                'layanan': 'Layanan Administrasi'
+            };
+            document.getElementById('pageTitle').textContent = titles[section];
+            
+            document.getElementById(section + 'Section').style.display = 'block';
+            
+            if (section === 'pengaduan') loadPengaduan();
+            if (section === 'layanan') loadLayanan();
+        }
+        
+        
+        let currentPagePengaduan = 1;
+        const itemsPerPagePengaduan = 4;
+        
+        async function loadPengaduan() {
+            try {
+                const res = await fetch('/api/v1/warga/pengaduan', { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+                allPengaduan = data.data || [];
+                renderPengaduanPage(1);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        
+        function renderPengaduanPage(page) {
+            currentPagePengaduan = page;
+            const start = (page - 1) * itemsPerPagePengaduan;
+            const end = start + itemsPerPagePengaduan;
+            const paginatedItems = allPengaduan.slice(start, end);
+            
+            const table = document.getElementById('pengaduanFullTable');
+            if (allPengaduan.length === 0) {
+                table.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px 20px;color:#6b7280;"><i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:8px;opacity:0.4;"></i>Belum ada pengaduan. Klik "Buat Pengaduan" untuk melaporkan masalah pertama Anda.</td></tr>';
+                document.getElementById('pengaduanPaginationInfo').textContent = 'Menampilkan 0 dari 0 pengaduan';
+                document.getElementById('pengaduanPaginationControls').innerHTML = '';
+                return;
+            }
+            
+            table.innerHTML = paginatedItems.map(p => `
+                <tr>
+                    <td><strong>${p.judul}</strong></td>
+                    <td>${p.lokasi || '-'}</td>
+                    <td>${p.tanggalKejadian ? new Date(p.tanggalKejadian).toLocaleDateString('id-ID') : '-'}</td>
+                    <td><span class="priority-badge priority-${p.prioritas}">${p.prioritas}</span></td>
+                    <td><span class="status-badge status-${p.status}">${p.status}</span></td>
+                    <td>
+                        <button class="btn-icon" onclick="openDetailPengaduan('${p.id}')" title="Detail"><i class="fas fa-eye"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            const total = allPengaduan.length;
+            const to = Math.min(end, total);
+            document.getElementById('pengaduanPaginationInfo').textContent = `Menampilkan ${start + 1} - ${to} dari ${total} pengaduan`;
+            
+            const totalPages = Math.ceil(total / itemsPerPagePengaduan);
+            let pageHtml = `<button class="page-btn" ${page === 1 ? 'disabled' : ''} onclick="renderPengaduanPage(${page - 1})"><i class="fas fa-chevron-left"></i></button>`;
+            for (let i = 1; i <= totalPages; i++) {
+                pageHtml += `<button class="page-btn ${i === page ? 'active' : ''}" onclick="renderPengaduanPage(${i})">${i}</button>`;
+            }
+            pageHtml += `<button class="page-btn" ${page === totalPages ? 'disabled' : ''} onclick="renderPengaduanPage(${page + 1})"><i class="fas fa-chevron-right"></i></button>`;
+            
+            document.getElementById('pengaduanPaginationControls').innerHTML = pageHtml;
+        }
+        
+        let currentPageLayanan = 1;
+        const itemsPerPageLayanan = 4;
+        
+        async function loadLayanan() {
+            try {
+                const res = await fetch('/api/v1/warga/layanan', { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+                allLayanan = data.data || [];
+                renderLayananPage(1);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        
+        function renderLayananPage(page) {
+            currentPageLayanan = page;
+            const start = (page - 1) * itemsPerPageLayanan;
+            const end = start + itemsPerPageLayanan;
+            const paginatedItems = allLayanan.slice(start, end);
+            
+            const table = document.getElementById('layananFullTable');
+            if (allLayanan.length === 0) {
+                table.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px 20px;color:#6b7280;"><i class="fas fa-file-contract" style="font-size:24px;display:block;margin-bottom:8px;opacity:0.4;"></i>Belum ada permohonan layanan. Klik "Ajukan Layanan" untuk mengajukan permohonan baru.</td></tr>';
+                document.getElementById('layananPaginationInfo').textContent = 'Menampilkan 0 dari 0 permohonan';
+                document.getElementById('layananPaginationControls').innerHTML = '';
+                return;
+            }
+            
+            table.innerHTML = paginatedItems.map(l => {
+                const idStr = l.nomorPermohonan || (l.id ? l.id.substring(0,8).toUpperCase() : '0000');
+                return `
+                <tr>
+                    <td><strong>#${idStr}</strong></td>
+                    <td>${l.kategori?.namaKategori || 'Layanan Umum'}</td>
+                    <td>${l.keperluan || '-'}</td>
+                    <td>${l.tglDiajukan ? new Date(l.tglDiajukan).toLocaleDateString('id-ID') : '-'}</td>
+                    <td><span class="status-badge status-${l.status || 'MENUNGGU'}">${l.status || 'MENUNGGU'}</span></td>
+                    <td>
+                        <button class="btn-icon" onclick="openDetailLayanan('${l.id}')" title="Detail"><i class="fas fa-eye"></i></button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+            
+            const total = allLayanan.length;
+            const to = Math.min(end, total);
+            document.getElementById('layananPaginationInfo').textContent = `Menampilkan ${start + 1} - ${to} dari ${total} permohonan`;
+            
+            const totalPages = Math.ceil(total / itemsPerPageLayanan);
+            let pageHtml = `<button class="page-btn" ${page === 1 ? 'disabled' : ''} onclick="renderLayananPage(${page - 1})"><i class="fas fa-chevron-left"></i></button>`;
+            for (let i = 1; i <= totalPages; i++) {
+                pageHtml += `<button class="page-btn ${i === page ? 'active' : ''}" onclick="renderLayananPage(${i})">${i}</button>`;
+            }
+            pageHtml += `<button class="page-btn" ${page === totalPages ? 'disabled' : ''} onclick="renderLayananPage(${page + 1})"><i class="fas fa-chevron-right"></i></button>`;
+            
+            document.getElementById('layananPaginationControls').innerHTML = pageHtml;
+        }
+
+        function showPengaduanModal() {
+            document.getElementById('pengaduanJudul').value = '';
+            document.getElementById('pengaduanDeskripsi').value = '';
+            document.getElementById('pengaduanLokasi').value = '';
+            document.getElementById('pengaduanPrioritas').value = 'SEDANG';
+            document.getElementById('pengaduanFiles').value = '';
+            document.getElementById('pengaduanModal').classList.add('active');
+        }
+
+        async function submitPengaduan() {
+            const judul = document.getElementById('pengaduanJudul').value;
+            const deskripsi = document.getElementById('pengaduanDeskripsi').value;
+            const lokasi = document.getElementById('pengaduanLokasi').value;
+            const prioritas = document.getElementById('pengaduanPrioritas').value;
+            const files = document.getElementById('pengaduanFiles').files;
+
+            if (!judul || !deskripsi) { alert('Judul dan deskripsi harus diisi!'); return; }
+
+            try {
+                // Step 1: Submit data pengaduan sebagai JSON
+                const res = await fetch('/api/v1/warga/pengaduan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify({ judul, deskripsi, lokasi, prioritas })
+                });
+                
+                if (!res.ok) {
+                    const error = await res.json();
+                    throw new Error(error.message || 'Gagal mengirim pengaduan');
+                }
+
+                const result = await res.json();
+                const pengaduanId = result.data?.id;
+
+                // Step 2: Upload files jika ada, kaitkan dengan pengaduanId
+                if (pengaduanId && files && files.length > 0) {
+                    for (let i = 0; i < files.length; i++) {
+                        const fd = new FormData();
+                        fd.append('file', files[i]);
+                        fd.append('referensiId', pengaduanId);
+                        fd.append('tipeReferensi', 'PENGADUAN');
+                        await fetch('/api/v1/upload', {
+                            method: 'POST',
+                            headers: { 'Authorization': 'Bearer ' + token },
+                            body: fd
+                        });
+                    }
+                }
+
+                alert('Pengaduan berhasil dikirim!');
+                closeModal('pengaduanModal');
+                loadData();
+            } catch (err) {
+                alert('Gagal mengirim pengaduan: ' + err.message);
+            }
+        }
+
+        async function showLayananModal() {
+            document.getElementById('layananModal').classList.add('active');
+            try {
+                const res = await fetch('/api/v1/kategori/list', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                const kategoris = data.data || [];
+                
+                const select = document.getElementById('layananKategori');
+                select.innerHTML = '<option value="">Pilih jenis layanan...</option>' + 
+                    kategoris.map(k => `<option value="${k.id}">${k.namaKategori}</option>`).join('');
+                
+                document.getElementById('dynamicFormFields').innerHTML = '';
+                document.getElementById('layananKeperluan').value = '';
+            } catch (e) {
+                console.error('Gagal memuat kategori', e);
+            }
+        }
+
+        async function onKategoriChange() {
+            const kategoriId = document.getElementById('layananKategori').value;
+            const container = document.getElementById('dynamicFormFields');
+            if (!kategoriId) {
+                container.innerHTML = '';
+                return;
+            }
+            container.innerHTML = '<div style="text-align:center;padding:16px;color:#999">Memuat form...</div>';
+            try {
+                const res = await fetch(`/api/v1/kategori/${kategoriId}/fields`, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                const fields = data.data || [];
+                if (fields.length === 0) {
+                    container.innerHTML = '';
+                    return;
+                }
+                let html = '';
+                fields.forEach(f => {
+                    const req = f.required ? 'required' : '';
+                    const reqMark = f.required ? '<span style="color:red">*</span>' : '';
+                    html += `<div class="form-group" data-field-id="${f.id}" data-field-tipe="${f.tipe}">
+                        <label>${f.label} ${reqMark}</label>`;
+                    if (f.tipe === 'text') {
+                        html += `<input type="text" id="field_${f.id}" placeholder="${f.placeholder || ''}" ${req}>`;
+                    } else if (f.tipe === 'number') {
+                        html += `<input type="number" id="field_${f.id}" placeholder="${f.placeholder || ''}" ${req}>`;
+                    } else if (f.tipe === 'textarea') {
+                        html += `<textarea id="field_${f.id}" rows="3" placeholder="${f.placeholder || ''}" ${req}></textarea>`;
+                    } else if (f.tipe === 'date') {
+                        html += `<input type="date" id="field_${f.id}" ${req}>`;
+                    } else if (f.tipe === 'select') {
+                        let opsi = [];
+                        try { opsi = JSON.parse(f.opsi || '[]'); } catch(e) {}
+                        html += `<select id="field_${f.id}" ${req}><option value="">-- Pilih --</option>` + opsi.map(o => `<option value="${o}">${o}</option>`).join('') + `</select>`;
+                    } else if (f.tipe === 'file') {
+                        html += `<input type="file" id="field_${f.id}" data-field-label="${f.label}" accept="image/*,.pdf,.doc,.docx" style="padding:8px" ${req}>
+                        <small style="color:#666;font-size:12px">Format: jpg, png, pdf, doc, docx</small>`;
+                    }
+                    html += `</div>`;
+                });
+                container.innerHTML = html;
+            } catch(e) {
+                container.innerHTML = '<div style="color:red;padding:12px">Gagal memuat form</div>';
+            }
+        }
+        
+        async function submitLayanan() {
+            const kategoriId = document.getElementById('layananKategori').value;
+            const keperluan = document.getElementById('layananKeperluan').value;
+
+            if (!kategoriId) { alert('Pilih kategori terlebih dahulu'); return; }
+            if (!keperluan) { alert('Keperluan harus diisi'); return; }
+
+            // Collect jawaban from dynamic fields (non-file)
+            const jawaban = {};
+            const fileFields = [];
+            const fieldGroups = document.querySelectorAll('#dynamicFormFields [data-field-id]');
+            fieldGroups.forEach(group => {
+                const fieldId = group.getAttribute('data-field-id');
+                const tipe = group.getAttribute('data-field-tipe');
+                if (tipe === 'file') {
+                    const input = document.getElementById('field_' + fieldId);
+                    if (input && input.files.length > 0) {
+                        fileFields.push({ fieldId, file: input.files[0], label: input.getAttribute('data-field-label') });
+                    }
+                } else {
+                    const input = document.getElementById('field_' + fieldId);
+                    if (input && input.value) {
+                        jawaban[fieldId] = input.value;
+                    }
+                }
+            });
+
+            const btnSubmit = document.getElementById('btnSubmitLayanan');
+            btnSubmit.disabled = true;
+            btnSubmit.textContent = 'Mengirim...';
+
+            try {
+                const res = await fetch('/api/v1/warga/layanan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify({ kategoriId: parseInt(kategoriId), keperluan, jawaban })
+                });
+                const data = await res.json();
+                if (!res.ok) { throw new Error(data.message || 'Gagal mengajukan layanan'); }
+                const layananId = data.data?.id;
+
+                // Upload file fields if any
+                if (layananId && fileFields.length > 0) {
+                    for (const ff of fileFields) {
+                        const formData = new FormData();
+                        formData.append('file', ff.file);
+                        formData.append('referensiId', layananId);
+                        formData.append('tipeReferensi', 'LAYANAN');
+                        formData.append('fieldId', ff.fieldId);
+                        await fetch('/api/v1/upload', {
+                            method: 'POST',
+                            headers: { 'Authorization': 'Bearer ' + token },
+                            body: formData
+                        });
+                    }
+                }
+
+                closeModal('layananModal');
+                document.getElementById('layananKeperluan').value = '';
+                document.getElementById('dynamicFormFields').innerHTML = '';
+                loadData();
+                alert('Layanan berhasil diajukan!');
+            } catch (e) {
+                alert('Gagal mengajukan layanan: ' + e.message);
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.textContent = 'Ajukan Layanan';
+            }
+        }
+        
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/login';
+        }
+
+        // ---- Notification System ----
+        let notifOpen = false;
+
+        // Load unread count on page load
+        loadUnreadCount();
+
+        function toggleNotifDropdown() {
+            notifOpen = !notifOpen;
+            document.getElementById('notifDropdown').style.display = notifOpen ? 'block' : 'none';
+            if (notifOpen) loadNotifikasi();
+        }
+
+        async function loadUnreadCount() {
+            try {
+                const res = await fetch('/api/v1/notifikasi/unread-count', { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+                const count = data.data?.count || 0;
+                const badge = document.getElementById('notifBadge');
+                if (count > 0) {
+                    badge.textContent = count > 99 ? '99+' : count;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            } catch(e) {}
+        }
+
+        async function loadNotifikasi() {
+            try {
+                const res = await fetch('/api/v1/notifikasi', { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+                const list = data.data || [];
+                const container = document.getElementById('notifList');
+                if (list.length === 0) {
+                    container.innerHTML = '<div style="text-align:center;padding:20px;color:#6b7280;font-size:13px">Tidak ada notifikasi</div>';
+                    return;
+                }
+                container.innerHTML = list.map(n => `
+                    <div onclick="readNotif('${n.id}', '${n.tipe || ''}', '${n.referensiId || ''}')" style="padding:14px 20px;border-bottom:1px solid #e5e7eb;cursor:pointer;background:${n.sudahDibaca ? '#ffffff' : '#eff6ff'};transition:background 0.2s" onmouseover="this.style.background='${n.sudahDibaca ? '#f9fafb' : '#dbeafe'}'" onmouseout="this.style.background='${n.sudahDibaca ? '#ffffff' : '#eff6ff'}'">
+                        <div style="font-weight:${n.sudahDibaca ? '500' : '700'};font-size:14px;color:${n.sudahDibaca ? '#4b5563' : '#111827'}">${n.judul}</div>
+                        <div style="font-size:12px;color:#6b7280;margin-top:4px">${n.pesan}</div>
+                        <div style="font-size:11px;color:#9ca3af;margin-top:6px;font-weight:500;">${n.createdAt ? new Date(n.createdAt).toLocaleString('id-ID') : ''}</div>
+                    </div>
+                `).join('');
+            } catch(e) {}
+        }
+
+        async function readNotif(id, tipe, referensiId) {
+            await fetch('/api/v1/notifikasi/' + id + '/read', { method: 'PATCH', headers: { 'Authorization': 'Bearer ' + token } });
+            loadUnreadCount();
+            loadNotifikasi();
+            // Navigate to detail based on tipe
+            if (referensiId) {
+                notifOpen = false;
+                document.getElementById('notifDropdown').style.display = 'none';
+                if (tipe === 'PENGADUAN_BARU' || tipe === 'STATUS_PENGADUAN') {
+                    showSection('pengaduan');
+                    setTimeout(() => openDetailPengaduan(referensiId), 300);
+                } else if (tipe === 'LAYANAN_BARU' || tipe === 'STATUS_LAYANAN') {
+                    showSection('layanan');
+                    setTimeout(() => openDetailLayanan(referensiId), 300);
+                }
+            }
+        }
+
+        async function markAllRead() {
+            await fetch('/api/v1/notifikasi/read-all', { method: 'PATCH', headers: { 'Authorization': 'Bearer ' + token } });
+            loadUnreadCount();
+            loadNotifikasi();
+        }
+
+        loadUnreadCount();
+        setInterval(loadUnreadCount, 30000);
+        setInterval(loadData, 60000);
+
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('notifDropdown');
+            if (notifOpen && !e.target.closest('[onclick="toggleNotifDropdown()"]') && !dropdown.contains(e.target)) {
+                notifOpen = false;
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // ---- Detail Pengaduan & Layanan Modals ----
+        function openLightbox(src) {
+            document.getElementById('lightboxImg').src = src;
+            document.getElementById('lightboxModal').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightboxModal').classList.remove('active');
+        }
+
+        let currentDetailPengaduanId = null;
+        let currentDetailLayananId = null;
+
+        async function downloadPdf(url, filename) {
+            try {
+                const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + token } });
+                if (!res.ok) throw new Error('Gagal mengunduh PDF');
+                const blob = await res.blob();
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                URL.revokeObjectURL(link.href);
+                link.remove();
+            } catch (e) {
+                alert('Gagal mengunduh PDF. Silakan coba lagi.');
+            }
+        }
+
+        function renderRiwayatStatus(riwayat) {
+            if (!riwayat || riwayat.length === 0) return '';
+            let html = `<div style="margin-top:24px;">
+                <span style="font-size:13px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Riwayat Status</span>
+                <div style="margin-top:10px;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;">
+                    <table style="width:100%;border-collapse:collapse;margin:0;">
+                        <tr style="background:#f8fafc;">
+                            <th style="padding:12px;text-align:left;color:#475569;font-size:12px;">Dari</th>
+                            <th style="padding:12px;text-align:left;color:#475569;font-size:12px;">Ke</th>
+                            <th style="padding:12px;text-align:left;color:#475569;font-size:12px;">Catatan</th>
+                            <th style="padding:12px;text-align:left;color:#475569;font-size:12px;">Tanggal</th>
+                        </tr>`;
+            riwayat.forEach(r => {
+                const waktu = r.tanggal || r.waktu;
+                const tanggal = waktu ? new Date(waktu).toLocaleString('id-ID') : '-';
+                html += `<tr style="border-top:1px solid #e2e8f0;">
+                    <td style="padding:12px;color:#334155;">${r.statusLama || '-'}</td>
+                    <td style="padding:12px;color:#334155;">${r.statusBaru || '-'}</td>
+                    <td style="padding:12px;color:#334155;">${r.catatan || '-'}</td>
+                    <td style="padding:12px;color:#334155;">${tanggal}</td>
+                </tr>`;
+            });
+            return html + `</table></div></div>`;
+        }
+
+        function exportPengaduanPdf() {
+            if (currentDetailPengaduanId) {
+                downloadPdf('/api/v1/laporan/pengaduan/' + currentDetailPengaduanId + '/pdf', 'laporan-pengaduan-' + currentDetailPengaduanId + '.pdf');
+            }
+        }
+
+        function exportLayananPdf() {
+            if (currentDetailLayananId) {
+                downloadPdf('/api/v1/laporan/layanan/' + currentDetailLayananId + '/pdf', 'laporan-layanan-' + currentDetailLayananId + '.pdf');
+            }
+        }
+
+        async function openDetailPengaduan(id) {
+            currentDetailPengaduanId = id;
+            document.getElementById('detailPengaduanBody').innerHTML = '<div style="text-align:center;padding:30px;color:#999">Memuat...</div>';
+            document.getElementById('detailPengaduanModal').classList.add('active');
+            document.getElementById('btnDownloadPdfPengaduan').style.display = 'inline-flex';
+            try {
+                const res = await fetch(`/api/v1/pengaduan/${id}/detail`, { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+                const d = data.data;
+                let html = `
+                    <div style="display:flex;flex-direction:column;gap:20px;">
+                        <!-- Top Info Grid -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;background:#f8fafc;padding:20px;border-radius:12px;border:1px solid #e2e8f0;">
+                            <div>
+                                <span style="font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">ID Pengaduan</span>
+                                <div style="font-size:15px;color:#0f172a;font-weight:600;margin-top:6px;">${d.id || '-'}</div>
+                            </div>
+                            <div>
+                                <span style="font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Tanggal Kejadian</span>
+                                <div style="font-size:14px;color:#0f172a;font-weight:500;margin-top:6px;">
+                                    <i class="fas fa-calendar-alt" style="color:#64748b;margin-right:4px;"></i> 
+                                    ${d.tanggalKejadian ? new Date(d.tanggalKejadian).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'}) : '-'}
+                                </div>
+                            </div>
+                            <div>
+                                <span style="font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Status</span>
+                                <div style="margin-top:6px;"><span class="status-badge status-${d.status}">${d.status || '-'}</span></div>
+                            </div>
+                            <div>
+                                <span style="font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Prioritas</span>
+                                <div style="margin-top:6px;"><span class="priority-badge priority-${d.prioritas}">${d.prioritas || '-'}</span></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Main Content Area -->
+                        <div>
+                            <span style="font-size:13px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Judul Pengaduan</span>
+                            <div style="font-size:18px;color:#0f172a;font-weight:700;margin-top:6px;">${d.judul || '-'}</div>
+                        </div>
+
+                        <div>
+                            <span style="font-size:13px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Lokasi Kejadian</span>
+                            <div style="font-size:15px;color:#334155;margin-top:6px;display:flex;align-items:center;gap:8px;">
+                                <div style="background:#fee2e2;color:#ef4444;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                ${d.lokasi || '-'}
+                            </div>
+                        </div>
+
+                        <div>
+                            <span style="font-size:13px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Deskripsi Lengkap</span>
+                            <div style="font-size:14px;color:#334155;margin-top:6px;padding:20px;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;line-height:1.7;">
+                                ${d.deskripsi ? d.deskripsi.replace(/\n/g, '<br>') : '-'}
+                            </div>
+                        </div>
+                    </div>`;
+                    
+                if (d.catatanAdmin) {
+                    html += `
+                    <div style="margin-top:20px;">
+                        <span style="font-size:13px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Tanggapan / Catatan Admin</span>
+                        <div style="margin-top:6px;padding:16px;background:#fef3c7;border-left:4px solid #f59e0b;border-radius:0 8px 8px 0;color:#92400e;font-size:14px;line-height:1.6;">
+                            <i class="fas fa-info-circle" style="margin-right:6px;"></i> ${d.catatanAdmin}
+                        </div>
+                    </div>`;
+                }
+                
+                if (d.fotoBukti) {
+                    html += `
+                    <div style="margin-top: 24px;">
+                        <span style="font-size:13px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:10px;">
+                            <i class="fas fa-camera" style="margin-right:6px;color:#ef4444;"></i> Foto Bukti
+                        </span>
+                        <div style="position:relative;display:inline-block;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+                            <img src="${d.fotoBukti}" alt="Foto Bukti" style="max-height:250px;max-width:100%;object-fit:cover;display:block;cursor:pointer;transition:transform 0.3s;" onclick="openLightbox('${d.fotoBukti}')" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                        </div>
+                        <div style="margin-top:10px;">
+                            <a href="${d.fotoBukti}" target="_blank" style="font-size:13px;color:#2563eb;text-decoration:none;font-weight:500;">
+                                <i class="fas fa-external-link-alt" style="margin-right:4px;"></i> Buka foto di tab baru
+                            </a>
+                        </div>
+                    </div>`;
+                }
+                
+                if (d.lampiran && d.lampiran.length > 0) {
+                    html += `<div style="margin-top:24px;">
+                        <span style="font-size:13px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Lampiran Dokumen</span>
+                        <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:12px;">`;
+                    d.lampiran.forEach(l => {
+                        const isImage = l.tipeFile && (l.tipeFile.startsWith('image') || /\.(jpg|jpeg|png|gif|webp)$/i.test(l.namaFile || l.fileUrl || ''));
+                        if (isImage) {
+                            html += `
+                            <div style="text-align:center;">
+                                <img src="${l.fileUrl}" alt="${l.namaFile}" style="max-width:150px;max-height:150px;border-radius:8px;cursor:pointer;object-fit:cover;border:1px solid #e2e8f0;" onclick="openLightbox('${l.fileUrl}')">
+                                <div style="font-size:11px;color:#6b7280;margin-top:4px;">${l.namaFile || 'Foto'}</div>
+                            </div>`;
+                        } else {
+                            html += `
+                            <a href="${l.fileUrl}" target="_blank" style="display:flex;align-items:center;gap:8px;padding:10px 16px;background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;transition:all 0.2s;" onmouseover="this.style.background='#dbeafe';this.style.borderColor='#93c5fd';" onmouseout="this.style.background='#eff6ff';this.style.borderColor='#bfdbfe';">
+                                <i class="fas fa-file-download"></i> Unduh ${l.namaFile || 'Lampiran'}
+                            </a>`;
+                        }
+                    });
+                    html += `</div></div>`;
+                }
+                html += renderRiwayatStatus(d.riwayatStatus);
+                document.getElementById('detailPengaduanBody').innerHTML = html;
+            } catch (e) {
+                document.getElementById('detailPengaduanBody').innerHTML = '<div style="color:red;padding:20px">Gagal memuat detail pengaduan</div>';
+            }
+        }
+
+        async function openDetailLayanan(id) {
+            currentDetailLayananId = id;
+            document.getElementById('detailLayananBody').innerHTML = '<div style="text-align:center;padding:30px;color:#999">Memuat...</div>';
+            document.getElementById('detailLayananModal').classList.add('active');
+            document.getElementById('btnDownloadPdfLayanan').style.display = 'inline-flex';
+            try {
+                const res = await fetch(`/api/v1/warga/layanan/${id}`, { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+                const d = data.data;
+                const kategori = d.kategori?.namaKategori || '-';
+                let html = `
+                    <div style="display:flex;flex-direction:column;gap:20px;">
+                        <!-- Top Info Grid -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;background:#f8fafc;padding:20px;border-radius:12px;border:1px solid #e2e8f0;">
+                            <div>
+                                <span style="font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">No. Permohonan</span>
+                                <div style="font-size:15px;color:#0f172a;font-weight:600;margin-top:6px;">${d.nomorPermohonan || '-'}</div>
+                            </div>
+                            <div>
+                                <span style="font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Tanggal Diajukan</span>
+                                <div style="font-size:14px;color:#0f172a;font-weight:500;margin-top:6px;">
+                                    <i class="fas fa-calendar-alt" style="color:#64748b;margin-right:4px;"></i> 
+                                    ${d.tglDiajukan ? new Date(d.tglDiajukan).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'}) : '-'}
+                                </div>
+                            </div>
+                            <div>
+                                <span style="font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Status</span>
+                                <div style="margin-top:6px;"><span class="status-badge status-${d.status}">${d.status || '-'}</span></div>
+                            </div>
+                            <div>
+                                <span style="font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Kategori</span>
+                                <div style="font-size:14px;color:#0f172a;font-weight:500;margin-top:6px;">${kategori}</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Main Content Area -->
+                        <div>
+                            <span style="font-size:13px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Keperluan</span>
+                            <div style="font-size:14px;color:#334155;margin-top:6px;padding:20px;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;line-height:1.7;">
+                                ${d.keperluan ? d.keperluan.replace(/\n/g, '<br>') : '-'}
+                            </div>
+                        </div>
+                    </div>`;
+                    
+                if (d.catatanPetugas) {
+                    html += `
+                    <div style="margin-top:20px;">
+                        <span style="font-size:13px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Catatan Petugas</span>
+                        <div style="margin-top:6px;padding:16px;background:#fef3c7;border-left:4px solid #f59e0b;border-radius:0 8px 8px 0;color:#92400e;font-size:14px;line-height:1.6;">
+                            <i class="fas fa-info-circle" style="margin-right:6px;"></i> ${d.catatanPetugas}
+                        </div>
+                    </div>`;
+                }
+                
+                // Fields Jawaban
+                if (d.jawabanData && d.jawabanData.length > 0) {
+                    html += `
+                    <div style="margin-top:24px;">
+                        <span style="font-size:13px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:10px;">
+                            <i class="fas fa-list-alt" style="margin-right:6px;color:#2563eb;"></i> Data Isian Form
+                        </span>
+                        <div style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;">
+                            <table style="width:100%;border-collapse:collapse;margin:0;">`;
+                    d.jawabanData.forEach((j, i) => {
+                        html += `<tr style="${i > 0 ? 'border-top:1px solid #e2e8f0;' : ''}"><td style="padding:14px 16px;font-weight:600;width:40%;color:#475569;background:#f8fafc;border-right:1px solid #e2e8f0;">${j.field?.label || j.fieldId}</td><td style="padding:14px 16px;color:#0f172a;background:#ffffff;">${j.jawaban || '-'}</td></tr>`;
+                    });
+                    html += `       </table>
+                        </div>
+                    </div>`;
+                }
+
+                if (d.lampiran && d.lampiran.length > 0) {
+                    html += `<div style="margin-top:24px;">
+                        <span style="font-size:13px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Lampiran Dokumen</span>
+                        <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:12px;">`;
+                    d.lampiran.forEach(l => {
+                        const isImage = l.tipeFile && (l.tipeFile.startsWith('image') || /\.(jpg|jpeg|png|gif|webp)$/i.test(l.namaFile || l.fileUrl || ''));
+                        if (isImage) {
+                            html += `
+                            <div style="text-align:center;">
+                                <img src="${l.fileUrl}" alt="${l.namaFile}" style="max-width:150px;max-height:150px;border-radius:8px;cursor:pointer;object-fit:cover;border:1px solid #e2e8f0;" onclick="openLightbox('${l.fileUrl}')">
+                                <div style="font-size:11px;color:#6b7280;margin-top:4px;">${l.namaFile || 'Foto'}</div>
+                            </div>`;
+                        } else {
+                            html += `
+                            <a href="${l.fileUrl}" target="_blank" style="display:flex;align-items:center;gap:8px;padding:10px 16px;background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;transition:all 0.2s;" onmouseover="this.style.background='#dbeafe';this.style.borderColor='#93c5fd';" onmouseout="this.style.background='#eff6ff';this.style.borderColor='#bfdbfe';">
+                                <i class="fas fa-file-download"></i> Unduh ${l.namaFile || 'Dokumen'}
+                            </a>`;
+                        }
+                    });
+                    html += `</div></div>`;
+                }
+                html += renderRiwayatStatus(d.riwayatStatus);
+                document.getElementById('detailLayananBody').innerHTML = html;
+            } catch (e) {
+                document.getElementById('detailLayananBody').innerHTML = '<div style="color:red;padding:20px">Gagal memuat detail layanan</div>';
+            }
+        }
+
+        async function loadData() {
+            try {
+                // Fetch Kategori as well to update totalKategoriVal
+                const kategoriRes = await fetch('/api/v1/kategori/list', { headers: { 'Authorization': 'Bearer ' + token } });
+                const kategoriData = await kategoriRes.json();
+                const totalKategori = (kategoriData.data || []).length;
+                if(document.getElementById('totalKategoriVal')) {
+                    document.getElementById('totalKategoriVal').textContent = totalKategori;
+                }
+            } catch(e) {
+                console.error('Failed to load kategori count');
+            }
+
+            await Promise.all([loadPengaduan(), loadLayanan()]);
+            
+            if(document.getElementById('totalPengaduanVal')) {
+                document.getElementById('totalPengaduanVal').textContent = allPengaduan.length;
+            }
+            if(document.getElementById('totalLayananVal')) {
+                document.getElementById('totalLayananVal').textContent = allLayanan.length;
+            }
+            if(document.getElementById('totalBeresVal')) {
+                const beresPengaduan = allPengaduan.filter(p => p.status === 'SELESAI').length;
+                const beresLayanan = allLayanan.filter(l => l.status === 'SELESAI').length;
+                document.getElementById('totalBeresVal').textContent = beresPengaduan + beresLayanan;
+            }
+            
+            renderDashboardPengaduan();
+            renderDashboardLayanan();
+        }
+
+        function renderDashboardPengaduan() {
+            const table = document.getElementById('dashboardPengaduanTable');
+            if(!table) return;
+            if (allPengaduan.length === 0) {
+                table.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:24px 20px;color:#6b7280;"><i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:8px;opacity:0.4;"></i>Belum ada pengaduan yang dibuat. Klik "Buat Pengaduan" untuk melaporkan masalah.</td></tr>';
+                return;
+            }
+            // Show only top 5 recent pengaduan
+            const recent = allPengaduan.slice(0, 5);
+            table.innerHTML = recent.map(p => `
+                <tr>
+                    <td><strong style="color:var(--text-primary)">${p.judul}</strong></td>
+                    <td>${p.tanggalKejadian ? new Date(p.tanggalKejadian).toLocaleDateString('id-ID') : '-'}</td>
+                    <td><span class="priority-badge priority-${p.prioritas}">${p.prioritas}</span></td>
+                    <td><span class="status-badge status-${p.status}">${p.status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function renderDashboardLayanan() {
+            const table = document.getElementById('dashboardLayananTable');
+            if(!table) return;
+            if (allLayanan.length === 0) {
+                table.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:24px 20px;color:#6b7280;"><i class="fas fa-file-contract" style="font-size:24px;display:block;margin-bottom:8px;opacity:0.4;"></i>Belum ada permohonan layanan. Ajukan layanan untuk memulai.</td></tr>';
+                return;
+            }
+            // Show only top 5 recent layanan
+            const recent = allLayanan.slice(0, 5);
+            table.innerHTML = recent.map(l => {
+                const idStr = l.nomorPermohonan || (l.id ? l.id.substring(0,8).toUpperCase() : '0000');
+                return `
+                <tr>
+                    <td><strong>#${idStr}</strong></td>
+                    <td>${l.keperluan || '-'}</td>
+                    <td>${l.tglDiajukan ? new Date(l.tglDiajukan).toLocaleDateString('id-ID') : '-'}</td>
+                    <td><span class="status-badge status-${l.status || 'MENUNGGU'}">${l.status || 'MENUNGGU'}</span></td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+    </script>
+    <div id="toastContainer"></div>
+    <script src="/js/app.js"></script>
+</body>
+</html>

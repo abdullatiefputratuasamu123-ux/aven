@@ -1,0 +1,46 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - img [ref=e5]
+    - generic [ref=e15]:
+      - heading "SmartPelayanan" [level=1] [ref=e16]
+      - paragraph [ref=e17]: Sistem Pengaduan & Layanan Masyarakat
+  - generic [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e20]: Email
+      - generic [ref=e21]:
+        - generic: 
+        - textbox "Masukkan email" [ref=e22]
+    - generic [ref=e23]:
+      - generic [ref=e24]: Password
+      - generic [ref=e25]:
+        - generic: 
+        - textbox "Masukkan password" [ref=e26]
+        - generic [ref=e27] [cursor=pointer]: 
+    - button "Masuk" [ref=e28] [cursor=pointer]
+  - generic [ref=e29]:
+    - separator [ref=e30]
+    - generic [ref=e31]: atau
+    - separator [ref=e32]
+  - generic [ref=e34]:
+    - text: Belum punya akun?
+    - link "Daftar di sini" [ref=e35] [cursor=pointer]:
+      - /url: /register
+  - link " Laporkan Masalah Tanpa Login" [ref=e36] [cursor=pointer]:
+    - /url: /public-pengaduan
+    - generic [ref=e37]: 
+    - text: Laporkan Masalah Tanpa Login
+  - generic [ref=e38]:
+    - heading "Akun Demo" [level=4] [ref=e39]
+    - generic [ref=e40]:
+      - generic [ref=e41] [cursor=pointer]:
+        - generic [ref=e42]: 👤 Admin
+        - generic [ref=e43]: admin@smartpelayanan.com
+        - generic [ref=e44]: admin123
+      - generic [ref=e45] [cursor=pointer]:
+        - generic [ref=e46]: 👥 Warga 1
+        - generic [ref=e47]: warga@gmail.com
+        - generic [ref=e48]: warga123
+      - generic [ref=e49] [cursor=pointer]:
+        - generic [ref=e50]: 👥 Warga 2
+        - generic [ref=e51]: warga2@gmail.com
+        - generic [ref=e52]: warga123

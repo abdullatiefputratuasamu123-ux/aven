@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Super Admin - SmartPelayanan</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-shield-alt"></i> SmartPelayanan</h2>
+            <p id="superAdminName">Super Administrator</p>
+            <span class="sidebar-badge">SUPERADMIN</span>
+        </div>
+        <div class="sidebar-menu">
+            <a class="menu-item active" onclick="showSection('dashboard')">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a class="menu-item" onclick="showSection('users')">
+                <i class="fas fa-users-cog"></i> Kelola User
+            </a>
+            <a class="menu-item" onclick="showSection('pengaduan')">
+                <i class="fas fa-exclamation-circle"></i> Semua Pengaduan
+            </a>
+            <a class="menu-item" onclick="showSection('layanan')">
+                <i class="fas fa-file-alt"></i> Semua Layanan
+            </a>
+            <a class="menu-item" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1 id="pageTitle">Dashboard Super Admin</h1>
+            <div class="user-info">
+                <!-- Bell Notification -->
+                <div style="position:relative;cursor:pointer" onclick="toggleNotifDropdown()">
+                    <i class="fas fa-bell" style="font-size:22px;color:#9ca3af;transition:color 0.3s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#9ca3af'"></i>
+                    <span id="notifBadge" style="display:none;position:absolute;top:-6px;right:-6px;background:#ef4444;color:white;border-radius:50%;width:18px;height:18px;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700;box-shadow:0 0 10px rgba(239, 68, 68, 0.3)">0</span>
+                </div>
+                <div id="notifDropdown" style="display:none;position:absolute;top:70px;right:20px;width:340px;background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 15px 35px rgba(0,0,0,0.1);z-index:1000;max-height:400px;overflow-y:auto">
+                    <div style="padding:15px 20px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#ffffff;z-index:10;">
+                        <strong style="font-size:15px;color:#111827">Notifikasi</strong>
+                        <button onclick="markAllRead()" style="background:none;border:none;color:#2563eb;cursor:pointer;font-size:13px;transition:color 0.3s;font-weight:500;" onmouseover="this.style.color='#1e40af'" onmouseout="this.style.color='#2563eb'">Tandai semua dibaca</button>
+                    </div>
+                    <div id="notifList" style="padding:0">
+                        <div style="text-align:center;padding:20px;color:#6b7280;font-size:13px">Memuat...</div>
+                    </div>
+                </div>
+                <div class="user-details">
+                    <div class="name" id="saName">Super Admin</div>
+                    <div class="role">Super Administrator</div>
+                </div>
+                <div class="user-avatar" id="userAvatar">S</div>
+                <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection">
+            <div class="stats-grid">
+                <div class="stat-card red">
+                    <h3>Total User</h3>
+                    <div class="number" id="totalUser">0</div>
+                </div>
+                <div class="stat-card gold">
+                    <h3>Total Admin</h3>
+                    <div class="number" id="totalAdmin">0</div>
+                </div>
+                <div class="stat-card blue">
+                    <h3>Total Pengaduan</h3>
+                    <div class="number" id="totalPengaduan">0</div>
+                </div>
+                <div class="stat-card green">
+                    <h3>Total Layanan</h3>
+                    <div class="number" id="totalLayanan">0</div>
+                </div>
+            </div>
+            <div class="stats-grid" style="grid-template-columns: repeat(4,1fr)">
+                <div class="stat-card warning" style="--c:#ffc107">
+                    <h3>Pengaduan Baru</h3>
+                    <div class="number" id="pengBaru">0</div>
+                </div>
+                <div class="stat-card info">
+                    <h3>Diproses</h3>
+                    <div class="number" id="pengDiproses">0</div>
+                </div>
+                <div class="stat-card green">
+                    <h3>Selesai</h3>
+                    <div class="number" id="pengSelesai">0</div>
+                </div>
+                <div class="stat-card red">
+                    <h3>Ditolak</h3>
+                    <div class="number" id="pengDitolak">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Section -->
+        <div id="usersSection" class="section-hidden">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Kelola User</h2>
+                    <button class="btn btn-primary" onclick="showAddAdminModal()"><i class="fas fa-plus"></i> Tambah Admin</button>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>No. Telp</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable">
+                            <tr><td colspan="6" class="empty-state">Memuat...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pengaduan Section -->
+        <div id="pengaduanSection" class="section-hidden">
+            <div class="content-card">
+                <div class="card-header"><h2>Semua Pengaduan</h2></div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr><th>Judul</th><th>Pelapor</th><th>Lokasi</th><th>Prioritas</th><th>Status</th><th>Tanggal</th></tr>
+                        </thead>
+                        <tbody id="pengaduanTable">
+                            <tr><td colspan="6" class="empty-state">Memuat...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Layanan Section -->
+        <div id="layananSection" class="section-hidden">
+            <div class="content-card">
+                <div class="card-header"><h2>Semua Layanan</h2></div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr><th>No. Permohonan</th><th>Pemohon</th><th>Kategori</th><th>Keperluan</th><th>Tanggal</th><th>Status</th></tr>
+                        </thead>
+                        <tbody id="layananTable">
+                            <tr><td colspan="6" class="empty-state">Memuat...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Admin Modal -->
+    <div class="modal" id="addAdminModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Tambah Admin Baru</h3>
+                <button class="modal-close" onclick="closeModal('addAdminModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="adminNama" placeholder="Nama lengkap admin">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="adminEmail" placeholder="Email admin">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="adminPassword" placeholder="Password (min 6 karakter)">
+                </div>
+                <div class="form-group">
+                    <label>No. Telepon</label>
+                    <input type="tel" id="adminNoTelp" placeholder="Nomor telepon">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background:#e1e1e1" onclick="closeModal('addAdminModal')">Batal</button>
+                <button class="btn btn-primary" onclick="submitAddAdmin()">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
+
+        if (!token || role !== 'SUPERADMIN') {
+            window.location.href = '/login';
+        }
+
+        const namaLengkap = localStorage.getItem('namaLengkap') || 'Super Admin';
+        document.getElementById('superAdminName').textContent = namaLengkap;
+        document.getElementById('saName').textContent = namaLengkap;
+        document.getElementById('userAvatar').textContent = namaLengkap[0];
+
+        function showSection(section) {
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            event.target.closest('.menu-item').classList.add('active');
+
+            ['dashboard', 'users', 'pengaduan', 'layanan'].forEach(s => {
+                const el = document.getElementById(s + 'Section');
+                if (el) el.className = s === section ? '' : 'section-hidden';
+            });
+
+            const titles = { dashboard: 'Dashboard Super Admin', users: 'Kelola User', pengaduan: 'Semua Pengaduan', layanan: 'Semua Layanan' };
+            document.getElementById('pageTitle').textContent = titles[section] || section;
+
+            if (section === 'users') loadUsers();
+            if (section === 'pengaduan') loadPengaduan();
+            if (section === 'layanan') loadLayanan();
+        }
+
+        async function loadStats() {
+            try {
+                const res = await fetch('/api/v1/superadmin/stats', { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+                const d = data.data;
+                document.getElementById('totalUser').textContent = d.users?.total || 0;
+                document.getElementById('totalAdmin').textContent = d.users?.admin || 0;
+                document.getElementById('totalPengaduan').textContent = d.pengaduan?.total || 0;
+                document.getElementById('totalLayanan').textContent = d.layanan?.total || 0;
+                document.getElementById('pengBaru').textContent = d.pengaduan?.baru || 0;
+                document.getElementById('pengDiproses').textContent = d.pengaduan?.diproses || 0;
+                document.getElementById('pengSelesai').textContent = d.pengaduan?.selesai || 0;
+                document.getElementById('pengDitolak').textContent = d.pengaduan?.ditolak || 0;
+            } catch(e) { console.error(e); }
+        }
+
+        async function loadUsers() {
+            try {
+                const res = await fetch('/api/v1/superadmin/users', { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+                const users = data.data || [];
+                const roleBadge = { ADMIN: 'badge-admin', WARGA: 'badge-warga', SUPERADMIN: 'badge-superadmin' };
+                document.getElementById('usersTable').innerHTML = users.map(u => `
+                    <tr>
+                        <td>${u.namaLengkap}</td>
+                        <td>${u.email}</td>
+                        <td>${u.noTelp || '-'}</td>
+                        <td><span class="status-badge ${roleBadge[u.role] || ''}">${u.role}</span></td>
+                        <td><span class="status-badge ${u.statusAktif ? 'badge-aktif' : 'badge-nonaktif'}">${u.statusAktif ? 'Aktif' : 'Nonaktif'}</span></td>
+                        <td>
+                            ${u.role !== 'SUPERADMIN' ? `<button class="btn btn-sm ${u.statusAktif ? 'btn-warning' : 'btn-success'}" onclick="toggleStatus('${u.id}', this)">${u.statusAktif ? 'Nonaktifkan' : 'Aktifkan'}</button>` : '<span style="color:#aaa;font-size:12px">-</span>'}
+                        </td>
+                    </tr>
+                `).join('') || '<tr><td colspan="6" class="empty-state">Tidak ada data</td></tr>';
+            } catch(e) { console.error(e); }
+        }
+
+        async function toggleStatus(id, btn) {
+            try {
+                const res = await fetch('/api/v1/superadmin/users/' + id + '/toggle-status', {
+                    method: 'PATCH', headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                loadUsers();
+            } catch(e) { alert('Gagal mengubah status'); }
+        }
+
+        function showAddAdminModal() {
+            document.getElementById('adminNama').value = '';
+            document.getElementById('adminEmail').value = '';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminNoTelp').value = '';
+            document.getElementById('addAdminModal').classList.add('active');
+        }
+
+        async function submitAddAdmin() {
+            const namaLengkap = document.getElementById('adminNama').value.trim();
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const noTelp = document.getElementById('adminNoTelp').value.trim();
+
+            if (!namaLengkap || !email || !password) { alert('Nama, email, dan password wajib diisi'); return; }
+            if (password.length < 6) { alert('Password minimal 6 karakter'); return; }
+
+            try {
+                const res = await fetch('/api/v1/superadmin/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify({ namaLengkap, email, password, noTelp })
+                });
+                const data = await res.json();
+                if (res.ok && data.status === 200) {
+                    closeModal('addAdminModal');
+                    loadUsers();
+                    alert('Admin berhasil ditambahkan!');
+                } else {
+                    alert(data.message || 'Gagal menambahkan admin');
+                }
+            } catch(e) { alert('Gagal menambahkan admin'); }
+        }
+
+        async function loadPengaduan() {
+            try {
+                const res = await fetch('/api/v1/superadmin/pengaduan', { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+                const list = data.data || [];
+                document.getElementById('pengaduanTable').innerHTML = list.map(p => `
+                    <tr>
+                        <td>${p.judul || '-'}</td>
+                        <td>${p.user?.namaLengkap || p.namaPelapor || '<em style="color:#999">Publik</em>'}</td>
+                        <td>${p.lokasi || '-'}</td>
+                        <td>${p.prioritas || '-'}</td>
+                        <td><span class="status-badge" style="background:#e8f4fd;color:#1a6fa8">${p.status || '-'}</span></td>
+                        <td>${p.tanggalKejadian || '-'}</td>
+                    </tr>
+                `).join('') || '<tr><td colspan="6" class="empty-state">Tidak ada data</td></tr>';
+            } catch(e) { console.error(e); }
+        }
+
+        async function loadLayanan() {
+            try {
+                const res = await fetch('/api/v1/superadmin/layanan', { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+                const list = data.data || [];
+                document.getElementById('layananTable').innerHTML = list.map(l => `
+                    <tr>
+                        <td>${l.nomorPermohonan || '-'}</td>
+                        <td>${l.user?.namaLengkap || '-'}</td>
+                        <td>${l.kategori?.namaKategori || '-'}</td>
+                        <td>${l.keperluan || '-'}</td>
+                        <td>${l.tglDiajukan || '-'}</td>
+                        <td><span class="status-badge" style="background:#e8f4fd;color:#1a6fa8">${l.status || '-'}</span></td>
+                    </tr>
+                `).join('') || '<tr><td colspan="6" class="empty-state">Tidak ada data</td></tr>';
+            } catch(e) { console.error(e); }
+        }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function logout() { localStorage.clear(); window.location.href = '/login'; }
+
+        // ---- Notification System ----
+        let notifOpen = false;
+        function toggleNotifDropdown() {
+            notifOpen = !notifOpen;
+            document.getElementById('notifDropdown').style.display = notifOpen ? 'block' : 'none';
+            if (notifOpen) loadNotifikasi();
+        }
+        async function loadUnreadCount() {
+            try {
+                const res = await fetch('/api/v1/notifikasi/unread-count', { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+                const count = data.data?.count || 0;
+                const badge = document.getElementById('notifBadge');
+                if (count > 0) { badge.textContent = count > 99 ? '99+' : count; badge.style.display = 'flex'; }
+                else { badge.style.display = 'none'; }
+            } catch(e) {}
+        }
+        async function loadNotifikasi() {
+            try {
+                const res = await fetch('/api/v1/notifikasi', { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+                const list = data.data || [];
+                const container = document.getElementById('notifList');
+                if (list.length === 0) { container.innerHTML = '<div style="text-align:center;padding:20px;color:#6b7280;font-size:13px">Tidak ada notifikasi</div>'; return; }
+                container.innerHTML = list.map(n => `
+                    <div onclick="readNotif('${n.id}', '${n.tipe || ''}', '${n.referensiId || ''}')" style="padding:14px 20px;border-bottom:1px solid #e5e7eb;cursor:pointer;background:${n.sudahDibaca ? '#ffffff' : '#eff6ff'};transition:background 0.2s" onmouseover="this.style.background='${n.sudahDibaca ? '#f9fafb' : '#dbeafe'}'" onmouseout="this.style.background='${n.sudahDibaca ? '#ffffff' : '#eff6ff'}'">
+                        <div style="font-weight:${n.sudahDibaca ? '500' : '700'};font-size:14px;color:${n.sudahDibaca ? '#4b5563' : '#111827'}">${n.judul}</div>
+                        <div style="font-size:12px;color:#6b7280;margin-top:4px">${n.pesan}</div>
+                        <div style="font-size:11px;color:#9ca3af;margin-top:6px;font-weight:500;">${n.createdAt ? new Date(n.createdAt).toLocaleString('id-ID') : ''}</div>
+                    </div>
+                `).join('');
+            } catch(e) {}
+        }
+        async function readNotif(id, tipe, referensiId) {
+            await fetch('/api/v1/notifikasi/' + id + '/read', { method: 'PATCH', headers: { 'Authorization': 'Bearer ' + token } });
+            loadUnreadCount(); loadNotifikasi();
+            // Navigate to detail based on tipe
+            if (referensiId) {
+                notifOpen = false;
+                document.getElementById('notifDropdown').style.display = 'none';
+                if (tipe === 'PENGADUAN_BARU' || tipe === 'STATUS_PENGADUAN') {
+                    showSection('pengaduan');
+                    setTimeout(function() { lihatDetailPengaduan(referensiId); }, 300);
+                } else if (tipe === 'LAYANAN_BARU' || tipe === 'STATUS_LAYANAN') {
+                    showSection('layanan');
+                    setTimeout(function() { lihatDetailLayanan(referensiId); }, 300);
+                }
+            }
+        }
+        async function markAllRead() {
+            await fetch('/api/v1/notifikasi/read-all', { method: 'PATCH', headers: { 'Authorization': 'Bearer ' + token } });
+            loadUnreadCount(); loadNotifikasi();
+        }
+        loadUnreadCount();
+        setInterval(loadUnreadCount, 30000);
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('notifDropdown');
+            if (notifOpen && !e.target.closest('[onclick="toggleNotifDropdown()"]') && !dropdown.contains(e.target)) {
+                notifOpen = false; dropdown.style.display = 'none';
+            }
+        });
+
+        loadStats();
+        setInterval(loadStats, 60000);
+    </script>
+    <div id="toastContainer"></div>
+    <script src="/js/app.js"></script>
+</body>
+</html>

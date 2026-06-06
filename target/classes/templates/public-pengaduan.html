@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporkan Masalah - SmartPelayanan</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="auth-body">
+    <div class="pengaduan-card-custom">
+        <div class="pengaduan-header">
+            <div class="logo-svg">
+                <svg width="48" height="56" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L3 5.5V13C3 18.5 6.8 23.5 12 25.5C13.5 24.9 14.9 24 16 22.8" stroke="#1e40af" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+                    <path d="M21 11V5.5L12 2" stroke="#1e40af" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+                    <circle cx="12" cy="11" r="2" fill="#1e40af"/>
+                    <path d="M16 18C16 15.8 14.2 14 12 14C9.8 14 8 15.8 8 18" fill="#1e40af"/>
+                    <circle cx="7" cy="12.5" r="1.5" fill="#1e40af"/>
+                    <path d="M9.5 18C9.5 16.3 8.2 15 6.5 15C4.8 15 3.5 16.3 3.5 18" fill="#1e40af"/>
+                    <circle cx="17" cy="12.5" r="1.5" fill="#1e40af"/>
+                    <path d="M20.5 18C20.5 16.3 19.2 15 17.5 15C16.8 15 16.1 15.2 15.6 15.6" fill="#1e40af"/>
+                    <path d="M12 21.5L16 25.5L24 17" stroke="#1e40af" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="pengaduan-header-text">
+                <h1>SmartPelayanan</h1>
+                <p>Sistem Pengaduan & Layanan Masyarakat</p>
+            </div>
+        </div>
+
+        <div class="info-banner">
+            <i class="fas fa-info-circle"></i>
+            <span>Laporkan masalah tanpa login. Setelah dikirim, Anda akan mendapatkan ID pelaporan untuk melacak status pengaduan Anda.</span>
+        </div>
+
+        <div id="errorMsg" class="error-msg"></div>
+        <div id="successMsg" class="success-msg"></div>
+
+        <form id="publicPengaduanForm">
+            <div class="form-row">
+                <div class="form-group-custom">
+                    <label>Nama Lengkap <span class="required">*</span></label>
+                    <div class="input-wrapper no-icon">
+                        <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
+                    </div>
+                </div>
+                <div class="form-group-custom">
+                    <label>Nomor Telepon <span class="required">*</span></label>
+                    <div class="input-wrapper no-icon">
+                        <input type="tel" id="telepon" placeholder="Masukkan nomor telepon" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group-custom">
+                <label>Email</label>
+                <div class="input-wrapper no-icon">
+                    <input type="email" id="email" placeholder="Masukkan email (opsional)">
+                </div>
+            </div>
+
+            <div class="form-group-custom">
+                <label>Jenis Laporan</label>
+                <div class="input-wrapper no-icon">
+                    <input type="text" value="Laporan" readonly style="background: #f3f4f6; cursor: not-allowed;">
+                </div>
+            </div>
+
+            <div class="form-group-custom">
+                <label>Judul Pengaduan <span class="required">*</span></label>
+                <div class="input-wrapper no-icon">
+                    <input type="text" id="judul" placeholder="Masukkan judul pengaduan" required>
+                </div>
+            </div>
+
+            <div class="form-group-custom">
+                <label>Deskripsi Masalah <span class="required">*</span></label>
+                <div class="input-wrapper no-icon">
+                    <textarea id="deskripsi" placeholder="Jelaskan masalah yang ingin dilaporkan secara detail..." required></textarea>
+                </div>
+            </div>
+
+            <div class="form-group-custom">
+                <label>Foto Bukti (opsional)</label>
+                <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Klik untuk upload foto bukti</span>
+                </div>
+                <input type="file" id="fileInput" accept="image/*" style="display:none">
+                <img id="photoPreview">
+                <div class="field-error" id="fileError">Format file tidak didukung</div>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> Kirim Pengaduan
+            </button>
+        </form>
+
+        <div class="back-link">
+            <a href="/login"><i class="fas fa-arrow-left"></i> Kembali ke halaman login</a>
+        </div>
+    </div>
+
+    <script>
+        // Upload preview
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    document.getElementById('fileError').style.display = 'block';
+                    return;
+                }
+                document.getElementById('fileError').style.display = 'none';
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const preview = document.getElementById('photoPreview');
+                    preview.src = ev.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Submit
+        document.getElementById('publicPengaduanForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+
+            try {
+                // Step 1: Upload file dulu jika ada
+                let fotoBukti = '';
+                const fileInput = document.getElementById('fileInput');
+                if (fileInput.files[0]) {
+                    const uploadFormData = new FormData();
+                    uploadFormData.append('file', fileInput.files[0]);
+
+                    const uploadRes = await fetch('/api/v1/public/upload', {
+                        method: 'POST',
+                        body: uploadFormData
+                    });
+
+                    if (!uploadRes.ok) {
+                        const uploadErr = await uploadRes.json();
+                        throw new Error(uploadErr.message || 'Gagal upload file');
+                    }
+
+                    const uploadData = await uploadRes.json();
+                    fotoBukti = uploadData.data?.urlFile || '';
+                }
+
+                // Step 2: Submit data pengaduan sebagai JSON
+                const payload = {
+                    namaPelapor: document.getElementById('nama').value,
+                    kontakPelapor: document.getElementById('telepon').value,
+                    email: document.getElementById('email').value,
+                    judul: document.getElementById('judul').value,
+                    deskripsi: document.getElementById('deskripsi').value,
+                    fotoBukti: fotoBukti
+                };
+
+                const res = await fetch('/api/v1/public/pengaduan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    const resultData = data.data || {};
+                    const idPelaporan = resultData.id || resultData.idPelaporan || '-';
+                    document.getElementById('successMsg').innerHTML = '<strong>Pengaduan berhasil dikirim!</strong><br>ID Pelaporan Anda: <div class="id-box">' + idPelaporan + '</div><br>Simpan ID ini untuk melacak status pengaduan.';
+                    document.getElementById('successMsg').style.display = 'block';
+                    document.getElementById('errorMsg').style.display = 'none';
+                    document.getElementById('publicPengaduanForm').reset();
+                    document.getElementById('photoPreview').style.display = 'none';
+                } else {
+                    document.getElementById('errorMsg').textContent = data.message || 'Gagal mengirim pengaduan. Silakan coba lagi.';
+                    document.getElementById('errorMsg').style.display = 'block';
+                }
+            } catch (err) {
+                document.getElementById('errorMsg').textContent = err.message || 'Terjadi kesalahan. Silakan coba lagi.';
+                document.getElementById('errorMsg').style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim Pengaduan';
+            }
+        });
+    </script>
+</body>
+</html>

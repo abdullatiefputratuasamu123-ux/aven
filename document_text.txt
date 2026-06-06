@@ -1,0 +1,900 @@
+﻿SISTEM PELAYANAN MASYARAKAT (SmartPelayanan)
+        Untuk memenuhi tugas mata kuliah IFB-202 Pemrograman Berbasis Objek 
+Disusun oleh :
+Kelompok 5
+Adi Nugraha                         152024105
+Abdul Latief Putra Tuasamu            152024124
+Resa Aulia A                          152024128
+Dila Amelisa S                            152024158
+Dosen pengampu   : Dr. Uung Ungkawa, S.T., M.T.
+PROGRAM STUDI INFORMATIKA
+FAKULTAS TEKNOLOGI INDUSTRI
+INSTITUT TEKNOLOGI NASIONAL
+BANDUNG
+2026
+KATA PENGANTAR
+Puji dan syukur penulis panjatkan ke hadirat Tuhan Yang Maha Esa atas segala rahmat dan karunia-Nya, sehingga penulis dapat menyelesaikan proposal yang berjudul â?oSistem Pelayanan Masyarakat (SmartPelayanan)â?? dengan baik dan tepat waktu.
+Penyusunan proposal ini bertujuan untuk memenuhi salah satu tugas pada mata kuliah Pemrograman Berorientasi Objek, sekaligus sebagai bentuk pemahaman penulis dalam menerapkan teknologi informatika untuk mendukung pelayanan masyarakat di bidang Peningkatan Pelayanan Masyarakat. Proposal ini membahas mengenai perancangan sistem pelayanan masyarakat berbasis web yang dapat membantu dalam pengelolaan data donor, pemantauan kebutuhan layanan masyarakat, serta proses pendaftaran donor secara online. Melalui sistem ini diharapkan pelayanan masyarakat dapat dilakukan dengan lebih efektif, efisien, dan terorganisir.
+Dalam proses penyusunan proposal ini, penulis menyadari bahwa penyelesaiannya tidak terlepas dari dukungan, bimbingan, serta ilmu yang telah diberikan selama proses perkuliahan. Oleh karena itu, penulis mengucapkan terima kasih yang sebesar-besarnya kepada Bapak Dr. Uung Ungkawa, S.T., M.T.  selaku dosen pengampu mata kuliah yang telah memberikan arahan, penjelasan, dan ilmu pengetahuan selama kegiatan pembelajaran berlangsung, sehingga penulis dapat menyelesaikan proposal ini dengan baik.
+Penulis menyadari bahwa proposal ini masih jauh dari sempurna. Oleh karena itu, penulis sangat mengharapkan kritik dan saran yang bersifat membangun guna penyempurnaan di masa yang akan datang. Penulis berharap proposal ini dapat memberikan manfaat serta menambah wawasan bagi para pembaca.
+Bandung, april 2026
+Penulis
+DAFTAR ISI
+Disusun oleh :1
+KATA PENGANTAR2
+DAFTAR ISI3
+BAB I4
+PENDAHULUAN4
+1.1 Latar Belakang4
+1.2 Rumusan Masalah4
+1.3 Tujuan Penelitian5
+1.4 Manfaat Penelitian5
+BAB II6
+LANDASAN TEORI6
+2.1. Object-Oriented Programming (OOP)6
+2.2. Encapsulation6
+2.3. Inheritance6
+2.4. Polymorphism7
+2.5. Abstraction7
+2.6. Bahasa Pemograman Java8
+2.7. Spring Boot8
+2.8 Spring Data JPA8
+2.9 REST API9
+2.10 Database (MySQL)9
+2.11 Deployment10
+BAB III11
+PERANCANGAN SISTEM11
+3.1 Studi Kasus11
+3.2 Fitur Aplikasi11
+3.3 Desain Database13
+3.4 Desain OOP & Rancangan API19
+3.5 Rancangan REST API21
+BAB I 
+PENDAHULUAN
+1.1 Latar Belakang
+Perkembangan teknologi informasi dan komunikasi saat ini telah memberikan dampak yang signifikan dalam berbagai bidang, termasuk dalam bidang pelayanan kesehatan. Pemanfaatan teknologi digital memungkinkan pengelolaan data menjadi lebih cepat, efisien, dan terorganisir dengan baik. Salah satu penerapannya adalah dalam sistem pelayanan masyarakat yang dapat membantu proses pencatatan, pemantauan, serta distribusi darah secara lebih terstruktur.
+Pelayanan publik yang efektif dan transparan merupakan hak dasar setiap warga negara. Namun dalam praktiknya, masih banyak warga yang mengalami kesulitan dalam menyampaikan pengaduan, mengakses layanan administrasi, maupun memantau status permohonan mereka. Hal ini disebabkan oleh kurangnya sistem yang mampu mengelola komunikasi antara warga dan pemerintah secara terintegrasi.
+Proses penyampaian pengaduan masyarakat saat ini masih banyak dilakukan secara manual, seperti melalui surat fisik atau kunjungan langsung ke kantor pelayanan, sehingga informasi tidak selalu tersampaikan secara cepat dan tepat. Selain itu, pengelolaan data pengaduan dan layanan administrasi masih belum terorganisir dengan baik dalam suatu sistem terpusat.
+Berdasarkan permasalahan tersebut, diperlukan suatu sistem yang dapat membantu mengelola proses pelayanan masyarakat secara efektif dan efisien. Oleh karena itu, dalam penelitian ini akan dirancang sebuah sistem pelayanan masyarakat berbasis web yang dapat menghubungkan rumah sakit dengan masyarakat sebagai donor, menyediakan informasi kebutuhan layanan masyarakat, serta mempermudah proses pendaftaran donor secara online. Sistem ini diharapkan dapat meningkatkan kualitas pelayanan masyarakat di bidang kesehatan.
+1.2 Rumusan Masalah
+Berdasarkan latar belakang tersebut, maka rumusan masalah dalam penelitian ini adalah sebagai berikut:
+Bagaimana merancang sistem pelayanan masyarakat berbasis web yang dapat meningkatkan pelayanan masyarakat?
+Bagaimana mengelola data pengaduan dan layanan administrasi masyarakat secara terstruktur dalam sistem?
+Bagaimana menyediakan fitur pendaftaran pelayanan masyarakat secara online?
+Bagaimana menyajikan informasi status layanan dan pengaduan kepada masyarakat secara efektif?
+1.3 Tujuan Penelitian
+Tujuan dari penelitian ini adalah:
+Merancang sistem pelayanan masyarakat berbasis web untuk meningkatkan pelayanan masyarakat
+Mengelola data pengaduan dan layanan administrasi masyarakat secara terintegrasi
+Mengembangkan fitur pendaftaran pelayanan masyarakat secara online
+Menyediakan informasi status layanan dan pengaduan kepada masyarakat secara lebih efektif
+1.4 Manfaat Penelitian 
+Penelitian ini diharapkan dapat memberikan manfaat sebagai berikut:
+Rumah Sakit Membantu dalam mengelola data pelayanan masyarakat serta memantau kebutuhan dan ketersediaan darah secara lebih terstruktur dan efisien.
+Masyarakat Mempermudah dalam memperoleh informasi terkait kebutuhan layanan masyarakat serta melakukan pendaftaran pelayanan masyarakat secara online.
+Peneliti Menambah wawasan dan pengalaman dalam merancang serta mengembangkan sistem berbasis web di bidang pelayanan kesehatan.
+1.5 Batasan Masalah 
+Agar penelitian lebih terarah, maka batasan masalah dalam penelitian ini adalah:
+Sistem yang dikembangkan berbasis web
+Sistem difokuskan pada pengelolaan pengaduan masyarakat dan layanan administrasi
+Fitur yang disediakan meliputi pengaduan masyarakat, layanan administrasi, notifikasi, dan manajemen pengguna
+Sistem tidak mencakup proses fisik pelayanan di lapangan
+Sistem digunakan sebagai media informasi dan pengelolaan data
+BAB II 
+LANDASAN TEORI
+2.1. Object-Oriented Programming (OOP)
+Object-Oriented Programming (OOP) merupakan paradigma pemrograman yang menggunakan objek sebagai dasar dalam pengembangan sistem. Pendekatan ini bertujuan untuk membuat program lebih terstruktur, mudah dikembangkan, serta mudah dipelihara.
+2.2. Encapsulation
+Encapsulation merupakan konsep dalam Object-Oriented Programming (OOP) yang digunakan untuk membungkus data (atribut) dan method dalam satu kesatuan yang disebut class. Konsep ini juga berfungsi untuk menyembunyikan detail internal suatu objek dari akses langsung pihak luar (information hiding), sehingga data hanya dapat diakses melalui method tertentu yang telah disediakan. Dengan adanya encapsulation, keamanan data menjadi lebih terjaga dan perubahan data dapat dikontrol melalui proses tertentu.
+ Contoh Penerapan:
+Dalam Sistem Pelayanan Masyarakat, terdapat class Donor yang memiliki atribut seperti nama, golonganDarah, nomorTelepon, dan alamat. Atribut tersebut bersifat private, sehingga tidak dapat diakses langsung dari luar class. Untuk mengakses dan mengubah data tersebut, digunakan method seperti getNama(), setNama(), getGolonganDarah(), dan setNomorTelepon(). Dengan demikian, data donor tetap aman dan hanya dapat dimodifikasi melalui method yang telah ditentukan.
+2.3. Inheritance
+Inheritance adalah konsep dalam Object-Oriented Programming (OOP) yang memungkinkan suatu class mewarisi atribut dan method dari class lain. Dalam inheritance terdapat dua jenis class, yaitu superclass sebagai kelas induk dan subclass sebagai kelas turunan yang mewarisi atribut serta method dari superclass. Konsep ini digunakan untuk mengurangi duplikasi kode serta meningkatkan efisiensi dalam pengembangan sistem.
+Contoh Penerapan:
+Dalam sistem ini terdapat class User sebagai superclass yang memiliki atribut seperti id, nama, email, dan password. Kemudian dibuat subclass Admin dan Masyarakat yang mewarisi atribut dari class User. Class Admin memiliki fungsi tambahan seperti mengelola data lokasi, data layanan, dan permohonan layanan, sedangkan class Masyarakat digunakan untuk melakukan request darah dan melihat riwayat donor. Dengan inheritance, tidak perlu menuliskan ulang atribut yang sama di setiap class.
+2.4. Polymorphism
+Polymorphism adalah kemampuan suatu method untuk memiliki lebih dari satu bentuk atau implementasi dalam Object-Oriented Programming (OOP). Dengan polymorphism, satu method dapat digunakan dalam berbagai kondisi dengan perilaku yang berbeda.
+Polymorphism terdiri dari overloading dan overriding.
+Overloading
+Overloading adalah penggunaan method dengan nama yang sama tetapi memiliki parameter yang berbeda dalam satu class.
+Contoh Penerapan:
+Pada class DonationService, terdapat method:
+tambahDonation(donorId, lokasiId)
+tambahDonation(donorId, lokasiId, jumlahDarah)
+Kedua method tersebut memiliki nama yang sama tetapi parameter berbeda, sehingga memudahkan fleksibilitas dalam penggunaan.
+Overriding
+Overriding adalah proses mendefinisikan kembali method yang sudah ada pada superclass di dalam subclass dengan implementasi yang berbeda.
+Contoh Penerapan:
+Class User memiliki method login(), kemudian di subclass Admin method tersebut dioverride untuk menambahkan validasi khusus admin, sedangkan pada subclass Masyarakat method login() digunakan untuk akses pengguna biasa.
+2.5. Abstraction
+Abstraction adalah proses penyederhanaan objek dengan hanya menampilkan bagian penting dan menyembunyikan detail implementasinya. Konsep ini digunakan untuk mengurangi kompleksitas sistem sehingga memudahkan dalam pengembangan dan pemeliharaan aplikasi.
+ Contoh Penerapan:
+Dalam sistem ini digunakan interface DonationService yang hanya mendefinisikan method seperti:
+tambahDonation()
+getRiwayatDonor()
+Sedangkan implementasi detailnya terdapat pada class DonationServiceImpl. Dengan abstraction, pengguna sistem hanya mengetahui fungsi utama tanpa perlu memahami proses internal bagaimana data diproses atau disimpan.
+2.5.1 Interface
+Interface merupakan kumpulan deklarasi method yang digunakan sebagai kontrak bagi class lain. Interface hanya berisi definisi method tanpa implementasi sehingga class yang mengimplementasikannya wajib menyediakan implementasi dari method tersebut. Penggunaan interface membantu meningkatkan fleksibilitas, modularitas, dan kemudahan pengembangan sistem.
+Contoh Penerapan:
+Dalam Sistem Manajemen Donor Darah digunakan interface DonationService yang mendefinisikan beberapa method seperti:
+â-? tambahDonation()
+â-? getDonationById()
+â-? getRiwayatDonor()
+Implementasi dari method-method tersebut dilakukan pada class DonationServiceImpl. Dengan menggunakan interface, perubahan implementasi dapat dilakukan tanpa mempengaruhi class lain yang menggunakan layanan tersebut.
+2.5.2 Abstract Class
+Abstract Class merupakan class yang tidak dapat dibuat objeknya secara langsung dan digunakan sebagai dasar bagi class turunan. Abstract class dapat memiliki atribut, method biasa, maupun abstract method yang harus diimplementasikan oleh subclass.
+Contoh Penerapan:
+Dalam sistem ini digunakan class User sebagai abstract class yang memiliki atribut umum seperti id, nama, email, dan password. Class Admin dan Masyarakat merupakan turunan dari class User yang mewarisi atribut dan method tersebut serta menambahkan fungsi sesuai kebutuhan masing-masing.
+2.5.3 Exception Handling
+Exception Handling merupakan mekanisme penanganan kesalahan yang terjadi saat program dijalankan agar aplikasi tetap berjalan dengan baik dan tidak berhenti secara tiba-tiba. Penanganan exception dilakukan menggunakan blok try-catch atau custom exception.
+Contoh Penerapan:
+Dalam Sistem Manajemen Donor Darah, exception handling digunakan ketika pengguna mencari data donor atau data lokasi yang tidak ditemukan pada database. Sistem akan menampilkan pesan kesalahan yang sesuai melalui custom exception seperti ResourceNotFoundException sehingga pengguna mendapatkan informasi yang jelas mengenai kesalahan yang terjadi.
+2.6. Bahasa Pemograman Java
+Java merupakan bahasa pemrograman berbasis Object-Oriented Programming (OOP) yang digunakan dalam pengembangan aplikasi. Java memiliki keunggulan seperti portabilitas (dapat dijalankan di berbagai platform), keamanan yang baik, serta dukungan library yang luas sehingga banyak digunakan dalam pengembangan sistem berbasis web.
+ Contoh Penerapan:
+Pada Sistem Pelayanan Masyarakat, Java digunakan untuk membuat class seperti User, Donor, Donation, Location, dan BloodRequest. Konsep OOP seperti encapsulation, inheritance, dan polymorphism diterapkan dalam pengelolaan data dan logika sistem.
+2.7. Spring Boot
+Spring Boot adalah framework berbasis Java yang digunakan untuk membangun aplikasi web dengan konfigurasi otomatis. Framework ini mempermudah proses pengembangan karena menyediakan fitur seperti dependency management dan auto-configuration, sehingga pengembang tidak perlu melakukan konfigurasi secara manual.
+Contoh Penerapan:
+Dalam sistem ini, Spring Boot digunakan untuk membangun backend aplikasi berupa REST API. Class seperti DonorController, DonationController, dan BloodRequestController digunakan untuk menangani request dari client, sedangkan Service digunakan untuk mengelola logika bisnis.
+2.8 Spring Data JPA
+Spring Data JPA merupakan bagian dari Spring Framework yang digunakan untuk mengelola database menggunakan pendekatan Object Relational Mapping (ORM). Dengan JPA, pengembang dapat berinteraksi dengan database melalui objek tanpa harus menulis query SQL secara manual.
+ Contoh Penerapan:
+Pada sistem ini, setiap tabel seperti donor, donation, dan location direpresentasikan sebagai class Entity. Repository seperti DonorRepository dan DonationRepository digunakan untuk melakukan operasi database seperti menyimpan, mengambil, dan menghapus data tanpa menulis query SQL secara langsung.
+2.9 REST API
+REST API (Representational State Transfer Application Programming Interface) adalah metode komunikasi antara client dan server menggunakan protokol HTTP. REST API memungkinkan pertukaran data secara efisien dalam bentuk JSON.
+Metode yang digunakan:
+GET â+' mengambil data
+POST â+' menambahkan data
+PUT â+' memperbarui data
+DELETE â+' menghapus data
+ Contoh Penerapan:
+Dalam sistem ini:
+GET â+' menampilkan data donor dan lokasi instansi pelayanan
+POST â+' menambahkan data donor dan donation
+PUT â+' memperbarui data permohonan layanan
+DELETE â+' menghapus data donor
+Endpoint seperti /api/donor dan /api/donation digunakan untuk mengakses data dari client (frontend atau Postman).
+2.10 Database (MySQL) 
+Database merupakan kumpulan data yang disimpan secara terstruktur dan digunakan untuk mendukung sistem. Pada sistem ini digunakan MySQL sebagai database karena memiliki performa yang baik, stabil, serta mudah digunakan dalam pengembangan aplikasi berbasis web.
+Contoh Penerapan:
+MySQL digunakan untuk menyimpan data seperti:
+Data pengguna (users)
+Data donor (donor)
+Data riwayat donor (donation)
+Data lokasi instansi pelayanan (location)
+Data permohonan layanan (blood_request)
+Relasi antar tabel dihubungkan menggunakan primary key dan foreign key sehingga data dapat terintegrasi dengan baik.
+ 2.11 Deployment
+Deployment adalah proses penerapan sistem agar dapat diakses oleh pengguna melalui jaringan internet. Proses ini bertujuan untuk memastikan aplikasi dapat berjalan dengan baik pada lingkungan yang digunakan.
+Metode deployment yang digunakan meliputi:
+Cloudflare Tunnel
+Digunakan untuk menghubungkan server lokal ke internet tanpa memerlukan konfigurasi port forwarding, sehingga lebih aman dan mudah digunakan.
+Mini PC dengan ProxmoxDigunakan sebagai server lokal untuk menjalankan aplikasi secara stabil dengan dukungan virtualisasi sehingga mempermudah pengelolaan sistem.
+STB (Set Top Box) dengan Debian Digunakan sebagai alternatif perangkat server berbasis Linux yang ringan dan dapat digunakan untuk menjalankan aplikasi dengan kebutuhan sumber daya yang lebih kecil.
+Pemilihan metode deployment disesuaikan dengan kebutuhan sistem dan ketersediaan perangkat.
+BAB III 
+PERANCANGAN SISTEM
+3.1 Studi Kasus
+Sistem yang dirancang adalah Sistem Pelayanan Masyarakat (SmartPelayanan) . Sistem ini bertujuan untuk membantu masyarakat dalam memperoleh informasi dan layanan terkait pelayanan masyarakat secara lebih cepat, transparan, dan efisien.
+Saat ini, proses pelayanan administrasi dan penanganan pengaduan masyarakat di banyak instansi masih dilakukan secara manual atau belum terintegrasi dengan baik. Masyarakat sering mengalami kesulitan dalam menyampaikan keluhan, mengetahui status permohonan, serta mengakses layanan administrasi secara cepat. Selain itu, belum tersedia sistem yang dapat mengelola pengaduan dan layanan masyarakat secara terpadu dalam satu platform.
+3.2 Fitur Aplikasi
+Sistem Pelayanan Masyarakat Berbasis Web (SmartPelayanan) dirancang untuk meningkatkan kualitas pelayanan masyarakat melalui digitalisasi layanan pelayanan masyarakat. Sistem ini menyediakan berbagai fitur yang terintegrasi untuk mendukung proses pengelolaan data, pelayanan permohonan layanan, serta penyampaian informasi secara efektif.
+Berikut merupakan fitur-fitur utama yang terdapat dalam sistem:
+3.2.1 Fitur Autentikasi Pengguna (Login & Registrasi)
+Fitur autentikasi digunakan untuk mengelola akses pengguna ke dalam sistem. Setiap pengguna diwajibkan melakukan registrasi akun sebelum dapat menggunakan layanan yang tersedia.
+Sistem membedakan hak akses berdasarkan peran pengguna, yaitu Admin dan Masyarakat. Proses login dilakukan menggunakan email dan password yang telah terdaftar. Setelah berhasil login, pengguna akan diarahkan ke halaman sesuai dengan perannya masing-masing.
+3.2.2 Fitur Manajemen Data Donor
+Fitur ini digunakan untuk mengelola data individu yang bersedia menjadi pelayanan masyarakat. Data donor disimpan secara terstruktur sehingga dapat digunakan sebagai sumber informasi dalam proses pelayanan.
+Admin memiliki hak penuh untuk menambah, mengubah, menghapus, dan melihat data donor. Data yang dikelola meliputi identitas lengkap seperti nama, nama orang tua, nomor telepon, jenis kelamin, email, kategori layanan, dan alamat.
+3.2.3 Fitur Informasi Lokasi Donor Darah (instansi pelayanan/Rumah Sakit)
+Fitur ini menyediakan informasi mengenai lokasi tempat pelayanan masyarakat yang dapat diakses oleh masyarakat.
+Sistem menampilkan daftar lokasi pelayanan masyarakat yang mencakup nama tempat, alamat, serta wilayah. Selain itu, setiap lokasi juga dilengkapi dengan koordinat geografis berupa latitude dan longitude untuk mendukung integrasi dengan peta digital.
+3.2.4 Fitur Integrasi Peta (Google Maps)
+Fitur ini merupakan pengembangan dari informasi lokasi pelayanan masyarakat dengan menampilkan lokasi secara visual melalui peta digital.
+Pengguna dapat melihat posisi lokasi pelayanan masyarakat dalam bentuk marker pada peta. Selain itu, sistem juga menyediakan fitur navigasi yang memungkinkan pengguna mendapatkan petunjuk arah menuju lokasi pelayanan masyarakat melalui Google Maps. Dengan adanya fitur ini, masyarakat dapat lebih mudah menemukan lokasi pelayanan masyarakat secara akurat.
+3.2.5  Fitur Manajemen Stok Darah
+Fitur ini digunakan untuk mengelola data ketersediaan data layanan pada setiap lokasi donor. Admin dapat memperbarui jumlah data layanan berdasarkan kategori layanan tertentu seperti A, B, AB, dan O. Informasi stok ini dapat diakses oleh masyarakat sehingga dapat membantu dalam pengambilan keputusan saat melakukan permohonan layanan.
+3.2.6  Fitur Layanan Permintaan Darah
+Fitur ini memungkinkan masyarakat untuk mengajukan permohonan layanan secara online.
+Pengguna dapat mengisi data permintaan seperti kategori layanan yang dibutuhkan, jumlah darah, serta lokasi tujuan pengambilan. Permintaan yang diajukan akan diproses oleh Admin untuk selanjutnya ditindaklanjuti.
+3.2.7 Fitur Status Pelayanan
+Fitur ini digunakan untuk memberikan informasi terkait perkembangan proses permohonan layanan.
+Setiap permintaan akan memiliki status tertentu, yaitu:
+Pending (permintaan baru)
+Diproses (sedang ditangani)
+Selesai (permintaan telah terpenuhi)
+Pengguna dapat memantau status tersebut secara real-time melalui sistem.
+3.2.8 Fitur Riwayat Pelayanan
+Fitur ini memungkinkan masyarakat untuk menyampaikan keluhan, kritik, maupun saran terhadap pelayanan donor darah.Pengaduan yang masuk akan dikelola oleh Admin, yang dapat memberikan tanggapan atau tindakan lanjutan. Fitur ini menjadi sarana komunikasi antara masyarakat dan pengelola sistem.
+3.2.9 Fitur Pengaduan Masyarakat
+Fitur ini memungkinkan masyarakat untuk menyampaikan keluhan, kritik, maupun saran terhadap pelayanan masyarakat.
+Pengaduan yang masuk akan dikelola oleh Admin, yang dapat memberikan tanggapan atau tindakan lanjutan. Fitur ini menjadi sarana komunikasi antara masyarakat dan pengelola sistem.
+3.2.10 Fitur Riwayat  Pendonor
+Fitur ini digunakan untuk mencatat aktivitas pelayanan masyarakat yang telah dilakukan oleh pendonor. Data yang dicatat meliputi tanggal donor, lokasi donor, jumlah darah, dan status donor. Fitur ini memungkinkan pengguna melihat riwayat donor yang pernah dilakukan.
+3.3 Desain Database
+Sistem Pelayanan Masyarakat berbasis web dirancang untuk meningkatkan pelayanan masyarakat dalam mencari lokasi pelayanan masyarakat, melakukan permohonan layanan, memantau status pelayanan, serta mencatat aktivitas donor.
+Database digunakan untuk menyimpan seluruh data yang dibutuhkan seperti data pengguna, donor, lokasi instansi pelayanan, permohonan layanan, data layanan, pengaduan, serta riwayat pelayanan.
+3.3.1 ERD (Entity Relationship Diagram)
+Entity Relationship Diagram (ERD) merupakan representasi visual yang menggambarkan struktur data dalam Sistem Pelayanan Masyarakat berbasis web. Diagram pada Gambar 3.3.1 menampilkan beberapa entitas utama seperti Users, Donor, Location, Blood_Request, Blood_Stock, Service_History, Complaint, dan Donation beserta hubungan antar entitas tersebut.
+Gambar 3.3.1 ERD Donor Darah
+3.3.2 TRD (Table Relationship Diagram)
+Table Relational Diagram (TRD) merupakan representasi struktur tabel dalam database yang menggambarkan atribut, primary key, serta foreign key pada setiap tabel dalam Sistem Pelayanan Masyarakat berbasis web. TRD digunakan untuk menunjukkan implementasi dari Entity Relationship Diagram (ERD) ke dalam bentuk tabel yang siap digunakan dalam database.
+Gambar 3.3.2 TRD Donor Darah
+3.3.3  DDS (Data Dictionary System)
+Data Dictionary System (DDS) merupakan deskripsi rinci dari setiap tabel dan atribut yang digunakan dalam database Sistem Pelayanan Masyarakat berbasis web. DDS berfungsi untuk menjelaskan struktur data, tipe data, serta fungsi dari setiap field sehingga memudahkan pengembang dalam memahami dan mengelola database
+1.  Users
+PK/FK
+Name
+Datatype
+Length
+Allow Null
+Default
+Comment
+PK
+id_user
+BIGINT
+-
+No
+AUTO_INCREMENT
+ID unik pengguna
+name
+VARCHAR
+100
+No
+-
+Nama pengguna
+email
+VARCHAR
+100
+No
+-
+Email pengguna
+password
+VARCHAR
+255
+No
+-
+Password (hash)
+role
+VARCHAR
+20
+No
+'USER'
+Peran pengguna
+phone
+VARCHAR
+15
+Yes
+NULL
+Nomor telepon
+Donor
+PK/FK
+Name
+Datatype
+Length
+Allow Null
+Default
+Comment
+PK
+id_donor
+BIGINT
+-
+No
+AUTO_INCREMENT
+ID donor
+FK
+user_id
+BIGINT
+-
+No
+-
+Relasi ke users
+nama_ayah
+VARCHAR
+100
+Yes
+NULL
+Nama ayah
+nama_ibu
+VARCHAR
+100
+Yes
+NULL
+Nama ibu
+gender
+VARCHAR
+10
+No
+-
+Jenis kelamin
+golongan_darah
+VARCHAR
+5
+No
+-
+Golongan darah
+alamat
+TEXT
+-
+Yes
+NULL
+Alamat
+Lokasi
+PK/FK
+Name
+Datatype
+Length
+Allow Null
+Default
+Comment
+PK
+id_location
+BIGINT
+-
+No
+AUTO_INCREMENT
+ID lokasi
+name
+VARCHAR
+100
+No
+-
+Nama lokasi
+address
+TEXT
+-
+No
+-
+Alamat
+city
+VARCHAR
+50
+No
+-
+Kota
+latitude
+DOUBLE
+-
+Yes
+NULL
+Koordinat
+longitude
+DOUBLE
+-
+Yes
+NULL
+Koordinat
+Stok Darah
+PK/FK
+Name
+Datatype
+Length
+Allow Null
+Default
+Comment
+PK
+id_stock
+BIGINT
+-
+No
+AUTO_INCREMENT
+ID stok
+FK
+location_id
+BIGINT
+-
+No
+-
+Relasi ke location
+blood_type
+VARCHAR
+5
+No
+-
+Golongan darah
+quantity
+INT
+-
+No
+0
+Jumlah stok
+Request Darah
+PK/FK
+Name
+Datatype
+Length
+Allow Null
+Default
+Comment
+PK
+id_request
+BIGINT
+-
+No
+AUTO_INCREMENT
+ID request
+FK
+user_id
+BIGINT
+-
+No
+-
+Relasi ke users
+FK
+location_id
+BIGINT
+-
+No
+-
+Relasi ke location
+blood_type
+VARCHAR
+5
+No
+-
+Golongan darah
+quantity
+INT
+-
+No
+-
+Jumlah darah
+status
+VARCHAR
+20
+No
+'PENDING'
+Status request
+created_at
+TIMESTAMP
+-
+No
+CURRENT_TIMESTAMP
+Waktu dibuat
+Riwayat Pelayanan
+PK/FK
+Name
+Datatype
+Length
+Allow Null
+Default
+Comment
+PK
+id_history
+BIGINT
+-
+No
+AUTO_INCREMENT
+ID history
+FK
+request_id
+BIGINT
+-
+No
+-
+Relasi ke request
+status
+VARCHAR
+20
+No
+-
+Status pelayanan
+updated_at
+TIMESTAMP
+-
+No
+CURRENT_TIMESTAMP
+Waktu update
+Tabel Komplain
+PK/FK
+Name
+Datatype
+Length
+Allow Null
+Default
+Comment
+PK
+id_complaint
+BIGINT
+-
+No
+AUTO_INCREMENT
+ID complaint
+FK
+user_id
+BIGINT
+-
+No
+-
+Relasi ke users
+message
+TEXT
+-
+No
+-
+Isi pengaduan
+status
+VARCHAR
+20
+No
+'OPEN'
+Status pengaduan
+created_at
+TIMESTAMP
+-
+No
+CURRENT_TIMESTAMP
+Waktu dibuat
+Tabel Donasi
+PK/FK
+Name
+Datatype
+Length
+Allow Null
+Default
+Comment
+PK
+id_donation
+BIGINT
+-
+No
+AUTO_INCREMENT
+ID donation
+FK
+donor_id
+BIGINT
+-
+No
+-
+Relasi ke donor
+FK
+location_id
+BIGINT
+-
+No
+-
+Relasi ke location
+tanggal_donor
+DATE
+-
+No
+-
+Tanggal donor
+jumlah_darah
+INT
+-
+No
+-
+Jumlah darah (ml)
+3.4 Desain OOP & Rancangan API 
+Desain OOP (Object-Oriented Programming) adalah pendekatan dalam perancangan sistem yang memodelkan aplikasi sebagai kumpulan objek (class) yang saling berinteraksi. Setiap objek merepresentasikan entitas nyata dalam sistem, seperti pengguna, donor, atau permohonan layanan.
+3.4.1 Class Diagram
+Class diagram merupakan representasi visual dari struktur OOP yang menggambarkan class, atribut, method, serta hubungan antar class seperti inheritance, association, dan composition. Diagram ini membantu pengembang memahami struktur sistem sebelum diimplementasikan ke dalam kode program.
+Gambar 3.4.1 Class Diagram Donor Darah
+3.4.2 Hubungan antar class
+Inheritance (Admin terhadap User)
+Class Admin memiliki hubungan inheritance dengan class User, yang berarti Admin merupakan turunan dari User dan mewarisi seluruh atribut umum seperti id, nama, email, dan password. User dibuat sebagai abstract class karena hanya berfungsi sebagai dasar bagi class lain, sedangkan Admin menambahkan fungsi khusus seperti mengelola data dalam sistem.
+Association antara User dan Donor Class User memiliki hubungan association dengan class Donor dengan kardinalitas satu banding satu, yang berarti setiap user memiliki satu data donor. Donor menyimpan informasi tambahan seperti kategori layanan, alamat, dan tanggal lahir yang tidak terdapat pada User.
+Association antara Donor dan Donation Class Donor berhubungan dengan class Donation dalam relasi satu ke banyak, yang berarti satu donor dapat melakukan beberapa kali kegiatan pelayanan masyarakat, sedangkan setiap data Donation hanya dimiliki oleh satu Donor.
+Association antara Donation dan Location Class Donation memiliki hubungan dengan class Location dalam bentuk banyak ke satu, yang menunjukkan bahwa beberapa kegiatan donor dapat dilakukan di satu lokasi yang sama, seperti rumah sakit atau instansi pelayanan.
+Association antara User dan BloodRequest Class User memiliki hubungan satu ke banyak dengan class BloodRequest, karena satu user dapat membuat beberapa permohonan layanan sesuai kebutuhan.
+Composition antara BloodRequest dan ServiceHistory Class BloodRequest memiliki hubungan composition dengan ServiceHistory, yang berarti ServiceHistory merupakan bagian dari BloodRequest dan bergantung sepenuhnya pada keberadaannya. Jika BloodRequest dihapus, maka seluruh data ServiceHistory yang terkait juga akan ikut terhapus.
+3.4.3 Identifikasi Layer Sistem
+@Entity (Representasi database) Class User, Admin, Donor, Donation, BloodRequest, ServiceHistory, dan Location termasuk dalam kategori @Entity karena merepresentasikan tabel dalam database dan digunakan untuk menyimpan data sistem.
+@Repository (Akses data) Class seperti UserRepository, DonorRepository, DonationRepository, BloodRequestRepository, ServiceHistoryRepository, dan LocationRepository termasuk dalam @Repository karena berfungsi untuk mengakses database dan menjalankan query seperti pencarian data menggunakan metode findBy.
+@Service (Logika bisnis) Class seperti UserService, DonorService, DonationService, BloodRequestService, ServiceHistoryService, dan LocationService termasuk dalam @Service karena bertugas mengolah data dan menjalankan logika bisnis sebelum data dikirim ke atau diambil dari database.
+@Controller (Endpoint API) Class seperti UserController, DonorController, DonationController, BloodRequestController, ServiceHistoryController, dan LocationController termasuk dalam @Controller karena berfungsi menerima dan merespons request dari pengguna melalui API menggunakan metode HTTP seperti GET, POST, PUT, dan DELETE.
+3.5 Rancangan REST API 
+Rancangan REST API adalah proses merancang antarmuka komunikasi antara client (seperti web atau mobile) dengan server menggunakan prinsip REST (Representational State Transfer). Dalam rancangan ini, data dan fungsi sistem diakses melalui endpoint berbasis URL, serta menggunakan metode HTTP seperti GET, POST, PUT, dan DELETE untuk melakukan operasi terhadap resource (misalnya data user, donor, atau permintaan). Tujuan dari perancangan REST API adalah agar sistem dapat berkomunikasi secara terstruktur, mudah dipahami, fleksibel, dan dapat digunakan oleh berbagai platform secara konsisten. 
+Gambar 3.5 Endpoints Rest API
+1. USER API 
+Method
+URL
+Parameter
+Deskripsi
+GET
+/api/users
+-
+Mengambil semua data user
+GET
+/api/users/{id}
+id (path)
+Mengambil data user berdasarkan ID
+POST
+/api/users
+body JSON (name, email, password, role)
+Menambahkan user baru
+PUT
+/api/users/{id}
+id + body JSON
+Mengupdate data user
+DELETE
+/api/users/{id}
+id
+Menghapus user
+2. DONOR API 
+Method
+URL
+Parameter
+Deskripsi
+GET
+/api/donor
+-
+Mengambil semua data donor
+GET
+/api/donor/{id}
+id
+Mengambil data donor berdasarkan ID
+POST
+/api/donor
+body JSON (userId, golonganDarah, berat, dll)
+Menambahkan data donor
+PUT
+/api/donor/{id}
+id + body JSON
+Update data donor
+DELETE
+/api/donor/{id}
+id
+Menghapus donor
+3. DINATION API
+Method
+URL
+Parameter
+Deskripsi
+GET
+/api/donation
+-
+Mengambil semua data donasi
+GET
+/api/donation/{id}
+id
+Detail donasi
+POST
+/api/donation
+body JSON (donorId, locationId, jumlah)
+Menambahkan data donasi darah
+GET
+/api/donation/donor/{id}
+donorId
+Riwayat donasi per donor
+4. REQUEST DARAH API 
+Method
+URL
+Parameter
+Deskripsi
+GET
+/api/request
+-
+Mengambil semua permohonan layanan
+GET
+/api/request/{id}
+id
+Detail request
+POST
+/api/request
+body JSON (golonganDarah, jumlah)
+Membuat permohonan layanan
+PUT
+/api/request/{id}
+id + status
+Update status request
+DELETE
+/api/request/{id}
+id
+Menghapus request
+5.  LOCATION API 
+Method
+URL
+Parameter
+Deskripsi
+GET
+/api/location
+-
+Mengambil semua lokasi
+GET
+/api/location/{id}
+id
+Detail lokasi
+POST
+/api/location
+body JSON (nama, alamat, lat, long)
+Menambahkan lokasi
+PUT
+/api/location/{id}
+id + body
+Update lokasi
+DELETE
+/api/location/{id}
+id
+Hapus lokasi
+6. STOCK DARAH API 
+Method
+URL
+Parameter
+Deskripsi
+GET
+/api/stock
+-
+Melihat semua data layanan
+GET
+/api/stock/{id}
+id
+Detail stok
+PUT
+/api/stock/{id}
+id + jumlah
+Update data layanan
+7. COMPLAINT API 
+Method
+URL
+Parameter
+Deskripsi
+GET
+/api/complaint
+-
+Mengambil semua keluhan
+POST
+/api/complaint
+body JSON
+Menambahkan keluhan
+DELETE
+/api/complaint/{id}
+id
+Menghapus keluhan
+8. SERVICE HISTORY API  
+Method
+URL
+Parameter
+Deskripsi
+GET
+/api/history
+-
+Mengambil riwayat pelayanan
+GET
+/api/history/{id}
+id
+Detail riwayat
+POST
+/api/history
+body JSON
+Menambahkan riwayat
+GET
+/api/history/request/{id}
+requestId
+Riwayat berdasarkan request
+Users
+Pada entitas User, endpoint digunakan untuk mengelola data akun yang berperan sebagai pengguna sistem. Melalui GET /api/users, sistem dapat menampilkan seluruh data user, sedangkan GET /api/users/{id} digunakan untuk melihat detail user tertentu. Proses penambahan user baru dilakukan melalui POST /api/users dengan mengirimkan data seperti nama, email, dan password. Jika terdapat perubahan data, maka dapat dilakukan menggunakan PUT /api/users/{id}, dan apabila data sudah tidak diperlukan lagi dapat dihapus melalui DELETE /api/users/{id}. Entitas ini menjadi dasar karena berhubungan dengan peran pengguna dalam sistem. 
+Donor
+Pada entitas Donor, endpoint digunakan untuk mengelola data pendonor darah yang terdaftar dalam sistem. Endpoint GET /api/donor digunakan untuk menampilkan seluruh data donor, sedangkan GET /api/donor/{id} digunakan untuk melihat detail donor berdasarkan ID tertentu. Penambahan data donor dilakukan melalui POST /api/donor dengan mengirimkan informasi seperti golongan darah, alamat, jenis kelamin, dan data pendukung lainnya. Jika terdapat perubahan data donor, maka dapat dilakukan melalui PUT /api/donor/{id}. Sementara itu, DELETE /api/donor/{id} digunakan untuk menghapus data donor yang sudah tidak digunakan.
+Donation
+Pada entitas Donation, endpoint digunakan untuk mencatat aktivitas pelayanan masyarakat yang dilakukan oleh pendonor. Endpoint GET /api/donation berfungsi untuk menampilkan seluruh data donasi, sedangkan GET /api/donation/{donor} digunakan untuk melihat riwayat donor berdasarkan ID pendonor. Proses pencatatan donor dilakukan melalui POST /api/donation, di mana sistem akan menyimpan data donasi sekaligus memperbarui data layanan sesuai dengan jumlah yang didonorkan. Entitas ini berperan penting dalam menjaga ketersediaan data layanan dalam sistem. 
+Lokasi
+Pada entitas Lokasi, endpoint digunakan untuk mengelola data tempat pelaksanaan pelayanan masyarakat. Endpoint GET /api/lokasi digunakan untuk menampilkan seluruh lokasi yang tersedia, sedangkan GET /api/lokasi/{id} digunakan untuk melihat detail lokasi tertentu. Penambahan lokasi baru dilakukan melalui POST /api/lokasi, sementara pembaruan data lokasi seperti alamat atau koordinat dilakukan melalui PUT /api/lokasi/{id}. Jika lokasi sudah tidak digunakan, maka dapat dihapus melalui DELETE /api/lokasi/{id}. 
+Request Darah
+Pada entitas Request Darah, endpoint digunakan untuk menangani permohonan layanan dari pengguna atau instansi. Endpoint GET /api/requestdarah berfungsi untuk mengambil seluruh data permintaan, sedangkan GET /api/requestdarah/{id} digunakan untuk melihat detail permintaan tertentu. Untuk membuat permintaan baru digunakan POST /api/requestdarah, di mana sistem akan melakukan pengecekan data layanan dan menentukan status awal apakah dapat diproses atau masih pending. Selanjutnya, PUT /api/requestdarah/{id} digunakan untuk memperbarui status permintaan sesuai perkembangan proses, dan DELETE /api/requestdarah/{id} digunakan untuk menghapus data permintaan jika diperlukan. 
+BAB IV
+IMPLEMENTASI SISTEM
+4.1 Implementasi Entity
+Entity merupakan class yang digunakan untuk merepresentasikan tabel pada database. Setiap entity dibuat menggunakan anotasi @Entity dari Spring Data JPA sehingga dapat terhubung langsung dengan tabel pada database MySQL.
+Pada Sistem Pelayanan Donor Darah Masyarakat terdapat beberapa entity utama yaitu User, Donor, Location, BloodRequest, BloodStock, Donation, Complaint, dan ServiceHistory. Masing-masing entity memiliki atribut yang sesuai dengan struktur tabel pada database serta relasi antar entity menggunakan anotasi seperti @OneToOne, @OneToMany, dan @ManyToOne.
+Implementasi entity bertujuan untuk mempermudah proses penyimpanan, pengambilan, dan pengelolaan data pada sistem.
+4.2 Implementasi Repository
+Repository digunakan sebagai lapisan akses data yang berfungsi menghubungkan aplikasi dengan database. Pada sistem ini digunakan Spring Data JPA sehingga proses pengolahan data dapat dilakukan tanpa menuliskan query SQL secara manual.
+Beberapa repository yang digunakan antara lain UserRepository, DonorRepository, LocationRepository, BloodRequestRepository, BloodStockRepository, DonationRepository, ComplaintRepository, dan ServiceHistoryRepository.
+Melalui repository, sistem dapat melakukan operasi Create, Read, Update, dan Delete (CRUD) terhadap data yang tersimpan pada database.
+4.3 Implementasi Service
+Service merupakan lapisan yang berfungsi menjalankan logika bisnis sistem. Service bertindak sebagai penghubung antara Controller dan Repository.
+Pada sistem ini terdapat beberapa service seperti UserService, DonorService, DonationService, BloodRequestService, BloodStockService, ComplaintService, ServiceHistoryService, dan LocationService.
+Proses seperti validasi data, pengolahan data donor, pembaruan stok darah, serta pengelolaan status pelayanan dilakukan pada layer service sebelum data disimpan ke database.
+4.4 Implementasi Controller
+Controller berfungsi menerima request dari client dan mengirimkan response kembali kepada pengguna melalui REST API.
+Pada sistem ini digunakan beberapa controller seperti UserController, DonorController, DonationController, BloodRequestController, BloodStockController, ComplaintController, ServiceHistoryController, dan LocationController.
+Setiap controller menggunakan anotasi @RestController dan @RequestMapping untuk mengatur endpoint yang tersedia pada sistem.
+4.5 Implementasi REST API
+REST API digunakan sebagai media komunikasi antara client dan server menggunakan protokol HTTP.
+Metode yang digunakan pada sistem meliputi:
+GET digunakan untuk mengambil data.
+POST digunakan untuk menambahkan data.
+PUT digunakan untuk memperbarui data.
+DELETE digunakan untuk menghapus data.
+Beberapa endpoint utama yang digunakan antara lain:
+â?¢ /api/usersâ?¢ /api/donorâ?¢ /api/donationâ?¢ /api/requestâ?¢ /api/locationâ?¢ /api/stockâ?¢ /api/complaintâ?¢ /api/history
+Pengujian endpoint dilakukan menggunakan aplikasi Postman untuk memastikan setiap fitur berjalan dengan baik.
+4.6 Implementasi Layered Architecture
+Sistem Pelayanan Donor Darah Masyarakat menerapkan konsep Layered Architecture yang terdiri dari beberapa lapisan yaitu Controller Layer, Service Layer, Repository Layer, dan Database Layer.
+Controller Layer bertugas menerima request dari pengguna. Service Layer bertugas menjalankan logika bisnis aplikasi. Repository Layer berfungsi mengakses database menggunakan Spring Data JPA. Sedangkan Database Layer digunakan untuk menyimpan seluruh data sistem.
+Dengan penerapan Layered Architecture, kode program menjadi lebih terstruktur, mudah dikembangkan, serta mempermudah proses pemeliharaan aplikasi.
+4.7 Implementasi Exception Handling
+Exception Handling digunakan untuk menangani kesalahan yang terjadi selama proses eksekusi aplikasi sehingga sistem tetap dapat berjalan dengan baik.
+Pada sistem ini digunakan mekanisme try-catch dan custom exception untuk menangani berbagai kondisi kesalahan seperti data tidak ditemukan, input tidak valid, serta kesalahan saat proses penyimpanan data ke database.
+Dengan adanya Exception Handling, sistem dapat memberikan pesan kesalahan yang lebih jelas kepada pengguna dan mencegah terjadinya crash pada aplikasi.
+4.8 Hasil Implementasi Sistem
+Setelah seluruh komponen sistem berhasil diimplementasikan, aplikasi dapat menjalankan seluruh fitur utama yang telah dirancang. Fitur tersebut meliputi autentikasi pengguna, manajemen data donor, pengelolaan lokasi donor darah, manajemen stok darah, permintaan darah, pengaduan masyarakat, riwayat pelayanan, serta pencatatan aktivitas donor darah.
+Implementasi yang dilakukan menggunakan Spring Boot, Spring Data JPA, REST API, dan MySQL berhasil mendukung kebutuhan sistem secara keseluruhan. Seluruh modul dapat saling berinteraksi dengan baik dan mampu menjalankan proses bisnis sesuai dengan perancangan yang telah dibuat.
+BAB V
+DEPLOYMENT DAN CLOUDFLARE TUNNEL
+5.1 Tujuan Deployment
+Deployment merupakan proses penerapan aplikasi yang telah selesai dikembangkan ke lingkungan server agar dapat diakses oleh pengguna melalui jaringan internet. Pada Sistem Pelayanan Donor Darah Masyarakat, deployment dilakukan untuk memastikan seluruh fitur yang telah dibuat dapat digunakan secara online oleh masyarakat maupun administrator.
+Melalui deployment, aplikasi tidak hanya berjalan pada komputer pengembang, tetapi dapat diakses secara publik menggunakan URL yang tersedia melalui layanan Cloudflare Tunnel.
+5.2 Arsitektur Deployment Sistem
+Arsitektur deployment yang digunakan terdiri dari beberapa komponen utama, yaitu client, server aplikasi Spring Boot, database MySQL, dan Cloudflare Tunnel.
+Pengguna mengakses aplikasi melalui browser atau aplikasi client. Request yang dikirimkan pengguna akan diteruskan oleh Cloudflare Tunnel menuju server yang menjalankan aplikasi Spring Boot. Selanjutnya aplikasi akan memproses request dan melakukan komunikasi dengan database MySQL untuk mengambil atau menyimpan data yang dibutuhkan.
+5.3 Persiapan Deployment
+Sebelum proses deployment dilakukan, beberapa kebutuhan sistem dipersiapkan terlebih dahulu, yaitu:
+Java Development Kit (JDK) 17.
+Spring Boot Framework.
+Database MySQL.
+Maven Build Tools.
+Cloudflare Account.
+Cloudflared.
+Koneksi Internet.
+Setelah seluruh kebutuhan tersedia, dilakukan proses build aplikasi untuk menghasilkan file executable (.jar) yang siap dijalankan pada server.
+Perintah build aplikasi:
+mvn clean package
+Hasil build berupa file:
+donor-darah.jar
+5.4 Menjalankan Aplikasi Spring Boot
+Setelah proses build selesai, aplikasi dijalankan menggunakan Java Runtime Environment (JRE).
+Perintah yang digunakan:
+java -jar donor-darah.jar
+Setelah aplikasi berhasil dijalankan, server Spring Boot akan aktif dan siap menerima request dari pengguna melalui endpoint REST API yang telah disediakan.
+5.5 Konfigurasi Database
+Database MySQL digunakan untuk menyimpan seluruh data yang diperlukan sistem, seperti data pengguna, donor, lokasi donor darah, stok darah, permintaan darah, riwayat pelayanan, dan pengaduan masyarakat.
+Konfigurasi database dilakukan melalui file application.properties dengan menentukan URL database, username, password, dan driver MySQL yang digunakan.
+Dengan konfigurasi tersebut aplikasi dapat melakukan proses CRUD (Create, Read, Update, Delete) terhadap data yang tersimpan pada database.
+5.6 Implementasi Cloudflare Tunnel
+Cloudflare Tunnel digunakan untuk memberikan akses publik terhadap aplikasi yang berjalan pada server lokal tanpa memerlukan konfigurasi port forwarding.
+Tahapan yang dilakukan meliputi:
+Menginstal cloudflared pada server.
+Login ke akun Cloudflare menggunakan perintah cloudflared tunnel login.
+Membuat tunnel baru menggunakan perintah cloudflared tunnel create donor-darah.
+Menghubungkan tunnel dengan aplikasi Spring Boot.
+Menjalankan tunnel agar aplikasi dapat diakses melalui internet.
+Cloudflare Tunnel membantu meningkatkan keamanan akses aplikasi karena server tidak perlu membuka port secara langsung ke internet.
+5.7 URL Publik Sistem
+Setelah Cloudflare Tunnel berhasil dijalankan, aplikasi memperoleh URL publik yang dapat diakses dari berbagai lokasi melalui jaringan internet.
+URL Publik Sistem:
+https://....................................
+URL tersebut digunakan untuk mengakses layanan Sistem Pelayanan Donor Darah Masyarakat secara online.
+5.8 Hasil Deployment
+Hasil deployment menunjukkan bahwa aplikasi berhasil dijalankan dan dapat diakses menggunakan URL publik yang telah disediakan.
+Seluruh endpoint REST API dapat digunakan dengan baik untuk melakukan operasi pengelolaan data donor, lokasi donor darah, stok darah, permintaan darah, riwayat pelayanan, dan pengaduan masyarakat.
+Pengujian menggunakan Postman menunjukkan bahwa sistem mampu memberikan response sesuai dengan kebutuhan yang telah dirancang.
+5.9 Evaluasi Deployment
+Deployment yang dilakukan menggunakan Spring Boot dan Cloudflare Tunnel memberikan beberapa keuntungan, antara lain:
+Aplikasi dapat diakses secara online.
+Tidak memerlukan konfigurasi port forwarding.
+Lebih aman karena menggunakan jaringan Cloudflare.
+Mudah dalam proses konfigurasi dan pemeliharaan.
+Mendukung pengembangan sistem secara berkelanjutan.
+Berdasarkan hasil deployment yang telah dilakukan, sistem berhasil berjalan dengan baik dan seluruh fitur utama dapat digunakan sesuai dengan kebutuhan pengguna.
+BAB VI
+PENGUJIAN SISTEM
+6.1 Tujuan Pengujian
+Pengujian sistem dilakukan untuk memastikan bahwa seluruh fitur pada Sistem Pelayanan Donor Darah Masyarakat dapat berjalan sesuai dengan kebutuhan yang telah dirancang. Pengujian dilakukan menggunakan aplikasi Postman dengan mengakses endpoint REST API yang tersedia pada sistem.
+6.2 Pengujian Login dan Registrasi
+Pengujian login dan registrasi dilakukan untuk memastikan pengguna dapat membuat akun baru serta masuk ke dalam sistem menggunakan akun yang telah terdaftar. Berdasarkan hasil pengujian yang dilakukan, proses registrasi berhasil menyimpan data pengguna ke dalam database. Selain itu, proses login juga berhasil memvalidasi data pengguna dan memberikan akses sesuai dengan peran yang dimiliki.
+6.3 Pengujian Data Donor
+Pengujian data donor dilakukan untuk memastikan fitur pengelolaan data donor dapat berjalan dengan baik. Pengujian meliputi proses penambahan data donor baru, menampilkan data donor, memperbarui data donor, serta menghapus data donor. Hasil pengujian menunjukkan bahwa seluruh proses tersebut dapat dijalankan tanpa kendala dan data tersimpan dengan baik pada database.
+6.4 Pengujian Lokasi Donor Darah
+Pengujian lokasi donor darah dilakukan untuk memastikan sistem mampu mengelola informasi lokasi donor darah yang tersedia. Pengujian mencakup proses penambahan lokasi baru, menampilkan daftar lokasi, memperbarui informasi lokasi, serta menghapus data lokasi. Berdasarkan hasil pengujian, seluruh fungsi berjalan dengan baik sesuai dengan kebutuhan sistem.
+6.5 Pengujian Stok Darah
+Pengujian stok darah dilakukan untuk memastikan data ketersediaan darah dapat dikelola dengan baik oleh sistem. Proses pengujian meliputi penambahan stok darah, menampilkan data stok darah, serta memperbarui jumlah stok darah berdasarkan golongan darah tertentu. Hasil pengujian menunjukkan bahwa data stok darah dapat diproses dan ditampilkan dengan benar.
+6.6 Pengujian Permintaan Darah
+Pengujian permintaan darah dilakukan untuk memastikan pengguna dapat mengajukan permintaan darah melalui sistem. Selain itu, pengujian juga dilakukan terhadap proses perubahan status permintaan darah dari pending menjadi diproses hingga selesai. Hasil pengujian menunjukkan bahwa sistem mampu mengelola permintaan darah dengan baik dan status pelayanan dapat diperbarui sesuai kondisi yang terjadi.
+6.7 Pengujian Pengaduan Masyarakat
+Pengujian pengaduan masyarakat dilakukan untuk memastikan pengguna dapat mengirimkan keluhan, kritik, maupun saran melalui sistem. Data pengaduan yang dikirim berhasil disimpan ke dalam database dan dapat ditampilkan kembali oleh administrator untuk ditindaklanjuti. Seluruh proses pengelolaan pengaduan berjalan dengan baik sesuai kebutuhan sistem.
+6.8 Hasil Pengujian Sistem
+Berdasarkan seluruh pengujian yang telah dilakukan, Sistem Pelayanan Donor Darah Masyarakat berhasil menjalankan seluruh fitur utama sesuai dengan perancangan yang telah dibuat. Fitur autentikasi pengguna, pengelolaan donor, lokasi donor darah, stok darah, permintaan darah, pengaduan masyarakat, dan riwayat pelayanan dapat berfungsi dengan baik. Selain itu, seluruh endpoint REST API mampu memberikan respons yang sesuai dan data dapat tersimpan dengan baik pada database MySQL. Dengan demikian, sistem dinyatakan berhasil memenuhi kebutuhan fungsional yang telah ditetapkan.
+BAB VII
+KESIMPULAN DAN SARAN
+7.1 Kesimpulan
+Berdasarkan hasil perancangan, implementasi, deployment, dan pengujian yang telah dilakukan, dapat disimpulkan bahwa Sistem Pelayanan Donor Darah Masyarakat berhasil dibangun menggunakan bahasa pemrograman Java dengan framework Spring Boot serta database MySQL. Sistem ini mampu membantu masyarakat dalam memperoleh informasi dan layanan donor darah secara lebih cepat, mudah, dan terstruktur.
+Penerapan konsep Object-Oriented Programming (OOP) seperti Encapsulation, Inheritance, Polymorphism, Interface, Abstract Class, dan Exception Handling berhasil diterapkan pada pengembangan sistem. Selain itu, penggunaan Layered Architecture membuat struktur aplikasi menjadi lebih terorganisir dan mudah untuk dikembangkan maupun dipelihara.
+Sistem yang dibangun menyediakan berbagai fitur seperti autentikasi pengguna, manajemen data donor, informasi lokasi donor darah, pengelolaan stok darah, layanan permintaan darah, riwayat pelayanan, pengaduan masyarakat, dan riwayat donor. Seluruh fitur tersebut dapat berjalan dengan baik berdasarkan hasil pengujian yang telah dilakukan.
+Proses deployment menggunakan Spring Boot dan Cloudflare Tunnel juga berhasil dilakukan sehingga aplikasi dapat diakses melalui jaringan internet menggunakan URL publik. Dengan demikian, sistem yang dikembangkan telah memenuhi kebutuhan fungsional yang ditetapkan serta mampu mendukung peningkatan pelayanan masyarakat dalam bidang donor darah.
+7.2 Saran
+Pengembangan sistem di masa mendatang dapat dilakukan dengan menambahkan fitur notifikasi otomatis untuk memberikan informasi kepada pengguna terkait status permintaan darah maupun jadwal donor darah. Selain itu, sistem juga dapat dikembangkan dengan menambahkan fitur chatbot, integrasi peta yang lebih interaktif, serta sistem keamanan yang lebih baik seperti JWT Authentication.
+Pengembangan aplikasi mobile berbasis Android atau iOS juga dapat menjadi alternatif untuk meningkatkan kemudahan akses bagi masyarakat. Dengan adanya pengembangan lebih lanjut, diharapkan sistem dapat memberikan pelayanan donor darah yang lebih efektif, efisien, dan bermanfaat bagi masyarakat luas.

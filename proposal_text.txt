@@ -1,0 +1,1332 @@
+PROPOSAL PERANCANGAN SISTEM
+UJIAN TENGAH SEMESTER
+Praktikum Object Oriented Programming
+SmartPelayanan (SPLM)
+"Satu Pintu Digital untuk Pengaduan & Pelayanan Masyarakat"
+Sistem Informasi Pengaduan dan Layanan Administrasi
+Masyarakat Berbasis Spring Boot
+Bidang Pengembangan: Sistem Peningkatan Pelayanan Masyarakat
+Nama Anggota NIM
+[Nama Anggota 1] [NIM 1]
+[Nama Anggota 2] [NIM 2]
+[Nama Anggota 3] [NIM 3]
+[Nama Anggota 4] [NIM 4]
+Kelompok : [Nomor Kelompok]
+Dosen Pengampu : [Nama Dosen Pengampu]
+Asisten Laboratorium : [Nama Asisten Laboratorium]
+PROGRAM STUDI INFORMATIKA
+FAKULTAS TEKNOLOGI INDUSTRI
+INSTITUT TEKNOLOGI NASIONAL (ITENAS) BANDUNG
+2026
+Halaman 1 dari 18
+KATA PENGANTAR
+Puji dan syukur kami panjatkan ke hadirat Tuhan Yang Maha Esa atas segala
+rahmat dan karunia-Nya sehingga proposal perancangan sistem ini dapat diselesaikan
+dengan baik. Proposal ini disusun dalam rangka memenuhi tugas Ujian Tengah
+Semester (UTS) Praktikum Object Oriented Programming.
+Proposal ini mendeskripsikan rancangan sistem informasi bernama
+SmartPelayanan (SPLM), yaitu sebuah platform backend berbasis Spring Boot yang
+dirancang untuk memdigitalkan proses pengaduan dan layanan administrasi
+masyarakat. Di dalamnya tercakup latar belakang masalah, landasan teori OOP,
+desain database (ERD), rancangan class diagram, serta spesifikasi REST API secara
+menyeluruh.
+Kami menyadari bahwa proposal ini masih memiliki kekurangan. Oleh karena
+itu, kami terbuka terhadap saran dan masukan yang membangun dari dosen
+pengampu dan asisten laboratorium demi kesempurnaan laporan dan implementasi
+sistem ini.
+Bandung, 2026
+Tim Pengembang Kelompok [Nomor Kelompok]
+Halaman 2 dari 18
+DAFTAR ISI
+Kata Pengantar ...............................................................................................................2
+Daftar Isi ..........................................................................................................................3
+BAB I – Pendahuluan .....................................................................................................4
+1.1 Latar Belakang ........................................................................................................4
+1.2 Rumusan Masalah ...................................................................................................4
+1.3 Tujuan Pengembangan ............................................................................................5
+1.4 Batasan Sistem ........................................................................................................5
+1.5 Manfaat Sistem........................................................................................................5
+BAB II – Landasan Teori ...............................................................................................6
+2.1 Konsep Object Oriented Programming (OOP) .......................................................6
+2.2 Spring Boot dan Arsitektur Berlapis .......................................................................7
+2.3 REST API dan HTTP ..............................................................................................7
+2.4 Basis Data Relasional dan JPA ...............................................................................8
+BAB III – Perancangan Sistem ......................................................................................9
+3.1 Gambaran Umum Sistem ........................................................................................9
+3.2 Desain ERD (Entity Relationship Diagram) ...........................................................9
+3.3 Rancangan Class Diagram ......................................................................................11
+3.4 Rancangan REST API .............................................................................................13
+3.5 Alur Kerja Sistem (Workflow) ...............................................................................16
+BAB IV – Penutup ...........................................................................................................17
+4.1 Kesimpulan .............................................................................................................17
+4.2 Rencana Implementasi ............................................................................................17
+Halaman 3 dari 18
+BAB I
+PENDAHULUAN
+1.1 Latar Belakang
+Pelayanan publik merupakan salah satu tanggung jawab utama pemerintah
+kepada masyarakat. Namun, hingga saat ini banyak instansi pemerintah di tingkat
+kelurahan dan kecamatan yang masih mengandalkan proses manual dalam mengelola
+pengaduan warga maupun permohonan layanan administrasi seperti pembuatan surat
+keterangan, surat domisili, dan izin usaha mikro.
+Proses manual tersebut menimbulkan sejumlah permasalahan, di antaranya:
+antrean panjang di kantor pelayanan, risiko kehilangan berkas, ketidakjelasan status
+proses, serta rendahnya transparansi bagi warga selaku pemohon. Kondisi ini
+berdampak pada menurunnya kepercayaan masyarakat terhadap kualitas pelayanan
+pemerintah setempat.
+Perkembangan teknologi informasi, khususnya platform berbasis web dan
+REST API, membuka peluang untuk menghadirkan solusi digital yang mampu
+memusatkan, menvirtualkan, dan meningkatkan efisiensi proses pelayanan tersebut.
+Dengan memanfaatkan paradigma Object Oriented Programming (OOP) melalui
+framework Spring Boot, dimungkinkan untuk membangun sistem yang terstruktur,
+skalabel, dan mudah dipelihara.
+Berdasarkan latar belakang di atas, kami mengusulkan pengembangan sistem
+bernama "SmartPelayanan (SPLM)" — sebuah platform backend satu pintu digital
+yang memungkinkan warga mengajukan pengaduan dan permohonan layanan
+administrasi secara online, sementara petugas/admin dapat memantau, memproses,
+dan memperbarui status secara real-time melalui antarmuka REST API.
+1.2 Rumusan Masalah
+Berdasarkan uraian latar belakang di atas, rumusan masalah yang dihadapi adalah
+sebagai berikut:
+1. Bagaimana membangun platform backend (REST API) yang dapat menjadi
+satu pintu terpadu bagi warga untuk menyampaikan pengaduan dan
+mengajukan permohonan layanan administrasi secara digital?
+2. Bagaimana menyediakan mekanisme pelacakan status (tracking) permohonan
+secara real-time sehingga warga dapat mengetahui perkembangan
+pengajuannya tanpa harus mendatangi kantor?
+Halaman 4 dari 18
+3. Bagaimana mengelola dan mengarsipkan data pengaduan beserta dokumen
+pendukung secara sistematis agar admin dapat memonitor dan merespons
+dengan cepat?
+4. Bagaimana menerapkan prinsip-prinsip OOP (Encapsulation, Inheritance,
+Polymorphism, Abstraction) secara nyata dalam arsitektur sistem
+SmartPelayanan?
+1.3 Tujuan Pengembangan
+Tujuan dari pengembangan sistem SmartPelayanan adalah:
+1. Membangun aplikasi backend REST API berbasis Spring Boot yang
+terstruktur menggunakan pola Layered Architecture (Controller – Service –
+Repository).
+2. Mengimplementasikan manajemen pengaduan warga yang mencakup operasi
+CRUD lengkap beserta pembaruan status proses.
+3. Mengimplementasikan modul layanan administrasi yang mendukung
+pengajuan dan pengelolaan dokumen permohonan warga.
+4. Menerapkan konsep OOP secara terstruktur dan terdokumentasi sesuai
+standar penilaian UTS Praktikum OOP.
+5. Menyediakan dokumentasi perancangan sistem yang komprehensif meliputi
+ERD, Class Diagram, dan spesifikasi API.
+1.4 Batasan Sistem
+Agar pengembangan tetap terfokus, sistem SmartPelayanan dibatasi pada hal-hal
+berikut:
+• Lingkup pengembangan mencakup layer Backend (REST API) saja;
+antarmuka pengguna (frontend) tidak termasuk dalam cakupan proyek ini.
+• Sistem tidak mengintegrasikan modul pembayaran (payment gateway)
+apapun.
+• Autentikasi dan otorisasi diimplementasikan menggunakan mekanisme
+Role-Based Access Control (RBAC) sederhana dengan role: WARGA dan
+ADMIN.
+• Penyimpanan dokumen pendukung menggunakan referensi path/URL file;
+belum mencakup penyimpanan cloud (object storage).
+• Sistem diuji secara lokal menggunakan Postman/Insomnia; belum mencakup
+pengujian beban (load testing).
+Halaman 5 dari 18
+1.5 Manfaat Sistem
+Manfaat yang diharapkan dari implementasi SmartPelayanan antara lain:
+• Bagi Warga: Kemudahan mengajukan pengaduan atau permohonan layanan
+kapan saja dan di mana saja tanpa harus antre di kantor.
+• Bagi Admin/Petugas: Pengelolaan pengaduan dan layanan lebih terorganisir,
+data terpusat, dan proses monitoring lebih efisien.
+• Bagi Akademik: Sebagai media penerapan nyata konsep OOP, Spring Boot,
+dan desain sistem dalam konteks pelayanan publik.
+Halaman 6 dari 18
+BAB II
+LANDASAN TEORI
+2.1 Konsep Object Oriented Programming (OOP)
+Object Oriented Programming (OOP) adalah paradigma pemrograman yang
+mengorganisasikan kode ke dalam unit-unit yang disebut class dan object. Paradigma
+ini berfokus pada pemodelan entitas dunia nyata ke dalam bentuk objek yang
+memiliki atribut (data) dan perilaku (method). Empat pilar utama OOP yang
+diterapkan dalam SmartPelayanan adalah:
+a. Encapsulation (Enkapsulasi)
+Encapsulation adalah mekanisme penyembunyian detail implementasi internal
+sebuah class dari dunia luar. Dalam SmartPelayanan, seluruh field pada class Entity
+seperti User dan Pengaduan dideklarasikan sebagai private, dan akses dari luar
+dilakukan melalui method getter dan setter. Hal ini mencegah manipulasi data secara
+tidak terkontrol dan menjaga integritas data objek.
+b. Inheritance (Pewarisan)
+Inheritance memungkinkan sebuah class (subclass) mewarisi atribut dan
+method dari class lain (superclass). Dalam sistem ini, dirancang sebuah abstract class
+bernama BaseEntity yang memiliki field audit umum berupa id (UUID), createdAt,
+dan updatedAt. Class-class entitas utama seperti User, Pengaduan, dan
+LayananAdministrasi meng-extend BaseEntity sehingga otomatis memiliki field audit
+tersebut tanpa perlu mendefinisikan ulang.
+c. Polymorphism (Polimorfisme)
+Polymorphism memungkinkan satu method berperilaku berbeda berdasarkan
+konteks objek yang memanggilnya. Dalam SmartPelayanan, polimorfisme diterapkan
+melalui mekanisme interface: setiap modul bisnis mendefinisikan kontrak atau
+interface (misal: PengaduanService), dan implementasi nyatanya ditempatkan di kelas
+terpisah (misal: PengaduanServiceImpl). Spring Boot secara dinamis menginjeksikan
+implementasi tersebut (Dependency Injection), sehingga perubahan implementasi
+tidak mempengaruhi layer Controller.
+d. Abstraction (Abstraksi)
+Abstraction adalah proses menyembunyikan detail kompleks dan hanya
+mengekspos fungsionalitas esensial kepada pengguna. Dalam sistem ini, abstraksi
+diwujudkan melalui penggunaan interface sebagai service contract. Layer Controller
+hanya berinteraksi dengan interface service tanpa mengetahui detail implementasinya.
+Halaman 7 dari 18
+Selain itu, penggunaan abstract class BaseEntity juga merupakan contoh abstraksi
+untuk menghindari duplikasi kode audit.
+2.2 Spring Boot dan Arsitektur Berlapis
+Spring Boot adalah framework berbasis Java yang menyederhanakan
+pengembangan aplikasi berbasis Spring Framework dengan konfigurasi otomatis
+(auto-configuration) dan prinsip Convention over Configuration. Spring Boot
+memungkinkan pengembang untuk langsung fokus pada logika bisnis tanpa harus
+mengonfigurasi server atau dependency secara manual.
+SmartPelayanan mengadopsi Layered Architecture (Arsitektur Berlapis) tiga lapis:
+• Controller Layer (@RestController): Menerima HTTP request, memvalidasi
+input, mendelegasikan proses ke Service Layer, lalu mengemas response
+dalam format JSON.
+• Service Layer (@Service + Interface): Memuat seluruh logika bisnis
+aplikasi. Setiap service direpresentasikan sebagai interface yang
+diimplementasikan oleh kelas ServiceImpl.
+• Repository Layer (@Repository): Berinteraksi langsung dengan database
+menggunakan Spring Data JPA. Meng-extend JpaRepository<Entity, ID>
+untuk mendapatkan operasi CRUD built-in.
+2.3 REST API dan HTTP
+REST (Representational State Transfer) adalah gaya arsitektur komunikasi
+antara client dan server melalui protokol HTTP. API RESTful menggunakan HTTP
+method yang bermakna dan mengidentifikasi sumber daya (resource) melalui URL.
+SmartPelayanan mengimplementasikan HTTP method berikut:
+• GET — Mengambil/membaca data resource.
+• POST — Membuat resource baru.
+• PUT — Memperbarui data resource secara menyeluruh.
+• PATCH — Memperbarui sebagian field resource (misal: status saja).
+• DELETE — Menghapus resource.
+Seluruh response dari API SmartPelayanan menggunakan format JSON
+(JavaScript Object Notation) dengan struktur baku yang terdiri dari field: status,
+message, dan data.
+2.4 Basis Data Relasional dan JPA
+SmartPelayanan menggunakan basis data relasional (MySQL atau
+PostgreSQL) untuk menyimpan data secara persisten. Relasi antar tabel
+Halaman 8 dari 18
+direpresentasikan menggunakan Foreign Key sesuai dengan kaidah normalisasi
+database.
+Akses database dilakukan melalui Java Persistence API (JPA) dengan
+implementasi Hibernate sebagai ORM (Object Relational Mapping). Dengan JPA,
+class Java (@Entity) secara otomatis ter-mapping dengan tabel database, sehingga
+developer dapat berinteraksi dengan database menggunakan object Java tanpa
+menulis query SQL secara manual untuk operasi-operasi dasar.
+Halaman 9 dari 18
+BAB III
+PERANCANGAN SISTEM
+3.1 Gambaran Umum Sistem
+SmartPelayanan adalah sistem informasi backend yang berfungsi sebagai
+jembatan digital antara warga dan petugas administrasi. Sistem ini terdiri dari dua
+aktor utama: WARGA (pengguna yang mengajukan pengaduan/layanan) dan
+ADMIN (petugas yang memproses dan merespons setiap permohonan). Berikut
+adalah gambaran alur penggunaan sistem secara umum:
+• Warga melakukan registrasi dan login untuk mendapatkan akses ke sistem.
+• Warga dapat mengajukan pengaduan baru atau permohonan layanan
+administrasi.
+• Warga dapat memantau status pengaduan/permohonannya secara real-time.
+• Admin menerima notifikasi pengajuan baru dan dapat memperbarui status
+pengaduan.
+• Admin dapat mengelola data kategori layanan dan merekap seluruh data
+pengaduan.
+3.2 Desain ERD (Entity Relationship Diagram)
+Perancangan database SmartPelayanan terdiri dari enam tabel utama yang saling
+berelasi. Berikut adalah deskripsi lengkap setiap entitas beserta atributnya:
+Nama Tabel Primary Key Foreign Key Atribut / Field
+tb_user id (UUID) - nama_lengkap (VARCHAR), email
+(VARCHAR, UNIQUE), password
+(VARCHAR, BCrypt), no_telp
+(VARCHAR), alamat (TEXT), role
+(ENUM: WARGA/ADMIN), status_aktif
+(BOOLEAN), created_at (TIMESTAMP),
+updated_at (TIMESTAMP)
+tb_kategori_layanan id (INT, - nama_kategori (VARCHAR), deskripsi
+AUTO_INCREME (TEXT), is_active (BOOLEAN),
+NT) created_at (TIMESTAMP)
+tb_pengaduan id (UUID) user_id → judul (VARCHAR), deskripsi (TEXT),
+tb_user.id lokasi (VARCHAR), status (ENUM:
+BARU/DIPROSES/SELESAI/DITOLAK),
+prioritas (ENUM:
+RENDAH/SEDANG/TINGGI), foto_bukti
+(VARCHAR/URL), tanggal_kejadian
+(DATE), catatan_admin (TEXT),
+created_at (TIMESTAMP), updated_at
+(TIMESTAMP)
+tb_layanan_administ id (UUID) user_id → nomor_permohonan (VARCHAR,
+rasi tb_user.id UNIQUE), keperluan (TEXT),
+kategori_id → dokumen_pendukung (VARCHAR/URL),
+tb_kategori_layana status (ENUM:
+n.id MENUNGGU/DIPROSES/SELESAI/DIT
+OLAK), catatan_petugas (TEXT),
+Halaman 10 dari 18
+tgl_diajukan (DATE), tgl_selesai (DATE),
+created_at (TIMESTAMP), updated_at
+(TIMESTAMP)
+tb_respon_pengadua id (UUID) pengaduan_id → isi_respon (TEXT), tgl_respon
+n tb_pengaduan.id (TIMESTAMP)
+admin_id →
+tb_user.id
+tb_riwayat_status id (UUID) referensi_id tipe_referensi (ENUM:
+(UUID, PENGADUAN/LAYANAN), status_lama
+polymorphic) (VARCHAR), status_baru (VARCHAR),
+admin_id → alasan_perubahan (TEXT), changed_at
+tb_user.id (TIMESTAMP)
+Relasi Antar Entitas (ERD Relationships)
+Berikut penjabaran relasi antar tabel dalam sistem SmartPelayanan:
+• tb_user (1) ──< tb_pengaduan (N) : Satu warga dapat mengajukan banyak
+pengaduan. Relasi One-to-Many melalui FK user_id.
+• tb_user (1) ──< tb_layanan_administrasi (N) : Satu warga dapat
+mengajukan banyak permohonan layanan. Relasi One-to-Many melalui FK
+user_id.
+• tb_kategori_layanan (1) ──< tb_layanan_administrasi (N) : Satu kategori
+dapat digunakan oleh banyak permohonan. Relasi One-to-Many melalui FK
+kategori_id.
+• tb_pengaduan (1) ──< tb_respon_pengaduan (N) : Satu pengaduan dapat
+memiliki banyak respon dari admin. Relasi One-to-Many.
+• tb_user (1) ──< tb_respon_pengaduan (N) : Satu admin dapat memberikan
+banyak respon. Relasi One-to-Many melalui FK admin_id.
+• tb_riwayat_status : Mencatat semua perubahan status untuk pengaduan dan
+layanan (polymorphic reference).
+3.3 Rancangan Class Diagram
+Sistem SmartPelayanan dirancang menggunakan pola Layered Architecture dengan
+pemisahan tanggung jawab yang jelas. Berikut adalah deskripsi class-class yang
+direncanakan beserta keterkaitan antar kelasnya:
+Nama Class Tipe Atribut Method Relasi OOP
+BaseEntity @MappedSuperc - id: UUID + getId(): UUID Superclass dari:
+lass - createdAt: + getCreatedAt(): User, Pengaduan,
+(Abstract Class) LocalDateTime LocalDateTime LayananAdministr
+- updatedAt: + getUpdatedAt(): asi,
+LocalDateTime LocalDateTime ResponPengaduan
+[Auto-managed oleh ,
+JPA RiwayatStatus
+@PrePersist/@PreUpdat
+e]
+User @Entity - namaLengkap: + getNamaLengkap(): One-to-Many →
+Halaman 11 dari 18
+(Extends String String Pengaduan
+BaseEntity) - email: String + setPassword(pwd): LayananAdministr
+- password: String void asi
+- noTelp: String + getRole(): RoleEnum ResponPengaduan
+- alamat: String + isStatusAktif():
+- role: RoleEnum Boolean
+- statusAktif:
+Boolean
+Pengaduan @Entity - judul: String + getStatus(): Many-to-One →
+(Extends - deskripsi: String StatusEnum User
+BaseEntity) - lokasi: String + setStatus(s): void One-to-Many →
+- status: StatusEnum + getUser(): User ResponPengaduan
+- prioritas: + isOpen(): boolean RiwayatStatus
+PrioritasEnum
+- fotoBukti: String
+- tanggalKejadian:
+LocalDate
+- catatanAdmin:
+String
+- user: User
+KategoriLayanan @Entity - id: Integer + getNamaKategori(): One-to-Many →
+- namaKategori: String LayananAdministr
+String + isActive(): Boolean asi
+- deskripsi: String
+- isActive: Boolean
+LayananAdminist @Entity - + getStatus(): Many-to-One →
+rasi (Extends nomorPermohonan: StatusEnum User
+BaseEntity) String + setStatus(s): void Many-to-One →
+- keperluan: String + KategoriLayanan
+- generateNomorPermoho
+dokumenPendukung nan(): String
+: String
+- status: StatusEnum
+- catatanPetugas:
+String
+- tglDiajukan:
+LocalDate
+- tglSelesai:
+LocalDate
+- user: User
+- kategori:
+KategoriLayanan
+PengaduanService Interface - + findAll(): Implemented by:
+(Interface) (Service List<PengaduanDTO> PengaduanService
+Contract) + findById(id): Impl
+PengaduanDTO
++ save(req):
+PengaduanDTO
++ update(id, req):
+PengaduanDTO
++ updateStatus(id,
+status): void
++ delete(id): void
+PengaduanService @Service - Override semua method Implements:
+Impl (Implements pengaduanRepositor dari PengaduanService PengaduanService
+PengaduanServic y: + validateOwnership(id, Uses:
+e) userId): void PengaduanReposit
+PengaduanRepositor ory
+y
+-
+riwayatStatusReposi
+Halaman 12 dari 18
+tory:
+RiwayatStatusRepos
+itory
+PengaduanContro @RestController - pengaduanService: + getAllPengaduan(): Depends on:
+ller @RequestMappi PengaduanService ResponseEntity PengaduanService
+ng + (via Dependency
+("/api/v1/pengadu getPengaduanById(id): Injection)
+an") ResponseEntity
++ createPengaduan(req):
+ResponseEntity
++
+updatePengaduan(id,req
+): ResponseEntity
++ deleteById(id):
+ResponseEntity
++
+updateStatus(id,status):
+ResponseEntity
+PengaduanReposit @Repository - Inherited CRUD Used by:
+ory (Extends + findByUserId(userId) PengaduanService
+JpaRepository) + findByStatus(status) Impl
++ findByPrioritas(p)
+ApiResponse<T> Generic Wrapper - status: int + success(data): Digunakan oleh
+Class - message: String ApiResponse<T> semua
+(DTO) - data: T + error(msg): Controller sebagai
+- timestamp: ApiResponse<T> wrapper response
+LocalDateTime
+Enum yang Digunakan
+Berikut adalah enum (tipe data konstanta) yang digunakan dalam sistem:
+• RoleEnum: WARGA, ADMIN — Mendefinisikan peran pengguna dalam
+sistem.
+• StatusPengaduanEnum: BARU, DIPROSES, SELESAI, DITOLAK —
+Status progres pengaduan warga.
+• StatusLayananEnum: MENUNGGU, DIPROSES, SELESAI, DITOLAK —
+Status progres permohonan layanan administrasi.
+• PrioritasEnum: RENDAH, SEDANG, TINGGI — Tingkat urgensi dari
+sebuah pengaduan.
+3.4 Rancangan REST API
+Seluruh endpoint SmartPelayanan dikelompokkan dalam base URL: /api/v1. Format
+response menggunakan wrapper standar { "status": int, "message": String, "data":
+Object, "timestamp": String }. Autentikasi menggunakan Bearer Token (JWT) yang
+disertakan di header Authorization.
+a. Auth (Autentikasi)
+HTTP Endpoint URL Request Body / Response Deskripsi
+Halaman 13 dari 18
+Method Param
+Body: { Registrasi akun warga
+POST /api/v1/auth/register
+n
+p
+a
+a
+m
+ss
+a
+w
+L
+o
+e
+r
+n
+d
+g
+,
+k
+n
+a
+o
+p
+T
+,
+e
+e
+l
+m
+p,
+ail,
+{
+2
+to
+0
+k
+1
+e
+C
+n
+r
+,
+e
+u
+a
+s
+t
+e
+e
+r
+d
+}
+b
+B
+a
+C
+ru
+ry
+.
+p
+P
+t
+a
+s
+s
+e
+s
+b
+w
+e
+o
+lu
+rd
+m
+d i-hash
+alamat } disimpan.
+Login dan mendapatkan
+200 OK
+POST /api/v1/auth/login
+B
+pa
+o
+s
+d
+s
+y
+w
+:
+o
+{
+r d
+e m
+}
+ail,
+refre
+{
+s
+t
+h
+o
+_
+k
+t
+e
+o
+n
+k
+,
+e n }
+J
+m
+te
+W
+r
+e
+p
+n
+T
+r
+g
+o
+a
+a
+t
+c
+k
+e
+c
+k
+s
+e
+e
+s
+s
+s
+i.
+s
+e
+t
+n
+o
+d
+k
+p
+e
+o
+n
+i n
+u
+t
+n tuk
+Memperbarui access
+POST /api/v1/auth/refresh
+H
+Re
+e
+f
+a
+r
+d
+e
+e
+s
+r
+h
+:
+T oken {
+2
+t
+0
+o
+0
+k
+O
+en
+K
+}
+t
+k
+o
+a
+k
+d
+e
+a
+n
+lu
+y
+a
+a
+r
+n
+sa
+g
+m
+su
+e
+d
+n
+a
+g
+h
+g unakan
+refresh token.
+Mengambil profil akun
+GET /api/v1/auth/profile
+H
+To
+e
+k
+ad
+en
+er : Bearer
+{ u
+2
+se
+0
+r
+0
+d
+O
+et
+K
+ai l }
+p
+lo
+e
+g
+n
+i
+g
+n
+g
+.
+una yang sedang
+b. Pengaduan Warga
+HTTP Endpoint URL Request Body / Response Deskripsi
+Method Param
+Mengambil semua data
+Header: Bearer 200 OK
+pengaduan. Admin
+GET /api/v1/pengaduan
+Token { data:
+mendapat semua data;
+Query: status, [pengaduan],
+prioritas, page, size pagination }
+W
+mi
+a
+li
+r
+k
+g
+n
+a
+y
+h
+a
+a
+s
+n
+e
+y
+n
+a
+d
+m
+iri
+e
+.
+n dapat
+200 OK Mengambil detail satu
+GET /api/v1/pengaduan/{id} Path: id (UUID) { detail pengaduan berdasarkan
+pengaduan } ID unik.
+Body: { judul,
+Warga mengajukan
+deskripsi, lokasi, 201 Created
+POST /api/v1/pengaduan prioritas, { pengaduan
+laporan pengaduan
+t
+f
+a
+o
+n
+to
+g
+B
+ga
+u
+l
+k
+K
+ti
+e
+?
+j a
+}
+d ian, baru }
+b
+d
+a
+ia
+r
+t
+u
+u
+.
+r
+S
+B
+ta
+A
+tu
+R
+s
+U
+o
+.
+t omatis
+Path: id Warga dapat mengedit
+200 OK
+PUT /api/v1/pengaduan/{id}
+Body: { judul,
+{ pengaduan
+isi pengaduannya
+d
+p
+e
+ri
+s
+o
+k
+r
+r
+i
+i
+t
+p
+as
+s i
+}
+, lokasi,
+updated }
+s
+B
+e
+A
+la
+R
+m
+U
+a
+.
+s tatus masih
+Admin memperbarui
+Path: id 200 OK status pengaduan dan
+PATCH /api/v1/pengaduan/{id}/status Body: { status, { status mencatat keterangan.
+catatanAdmin } updated } Perubahan status
+direkam di riwayat.
+Warga menghapus
+pengaduannya (hanya
+DELETE /api/v1/pengaduan/{id} Path: id (UUID)
+{ m
+20
+e
+0
+s s
+O
+ag
+K
+e }
+jika status masih
+BARU). Admin dapat
+menghapus kapan saja.
+Mengambil semua
+200 OK
+GET /api/v1/pengaduan/{id}/respon Path: id { data:
+respon/balasan admin
+[respon] }
+u
+te
+n
+r
+t
+t
+u
+en
+k
+t
+s
+u
+a
+.
+tu pengaduan
+Admin menambahkan
+201 Created
+POST /api/v1/pengaduan/{id}/respon
+P
+B
+a
+o
+t
+d
+h
+y
+:
+:
+i d
+{ isiRespon }
+{ respo
+}
+n baru
+r
+t
+p
+e
+e
+e
+r
+s
+n
+t
+p
+u
+g
+o
+l
+a
+i
+n
+s
+d
+/
+u
+t
+t
+a
+e
+a
+n
+r
+n
+h
+g
+w
+a
+g
+d
+a
+a
+a
+p
+r
+p
+g
+a n
+a.
+Halaman 14 dari 18
+c. Layanan Administrasi
+HTTP Endpoint URL Request Body / Response Deskripsi
+Method Param
+200 OK
+Header: Bearer Token Mengambil daftar
+GET /api/v1/layanan Query: status, kategori,
+{ data:
+semua permohonan
+page, size
+p
+[
+a
+l
+g
+a
+i
+y
+n
+a
+a
+n
+ti
+a
+o
+n
+n
+] ,
+}
+layanan administrasi.
+200 OK Mengambil detail satu
+GET /api/v1/layanan/{id} Path: id (UUID) { detail permohonan layanan
+permohonan } administrasi.
+Warga mengajukan
+201 Created
+Body: { kategoriId, permohonan layanan
+POST /api/v1/layanan keperluan,
+{ nomor
+baru. Nomor
+dokumenPendukung }
+per
+d
+m
+e
+o
+ta
+h
+i
+o
+l
+n
+}
+a n,
+p
+g
+e
+e
+r
+n
+m
+er
+o
+a
+h
+te
+o
+d
+n
+.
+a n auto-
+Path: id
+200 OK Admin memperbarui
+PATCH /api/v1/layanan/{id}/status
+Body: { status,
+{ status status permohonan
+c
+tg
+a
+l
+t
+S
+at
+e
+a
+l
+n
+es
+P
+a
+e
+i
+t
+?
+u
+}
+g as,
+updated } layanan administrasi.
+Warga membatalkan
+DELETE /api/v1/layanan/{id} Path: id
+{ m
+20
+e
+0
+s s
+O
+ag
+K
+e }
+p
+(h
+e
+a
+rm
+ny
+o
+a
+h
+j
+o
+ik
+n
+a
+a n
+s
+n
+ta
+y
+t
+a
+u s
+MENUNGGU).
+d. Kategori Layanan (Admin Only)
+HTTP Endpoint URL Request Body / Response Deskripsi
+Method Param
+Mengambil semua daftar
+200 OK
+GET /api/v1/kategori - { data:
+kategori layanan
+[kategori] }
+a
+te
+d
+r
+m
+se
+i
+d
+n
+i
+i
+a
+s
+.
+t rasi yang
+Admin membuat kategori
+Body: { 201 Created
+POST /api/v1/kategori namaKategori, { kategori baru
+layanan baru (misal:
+deskripsi } }
+S
+U
+u
+s
+r
+a
+a
+h
+t
+a
+D
+, d
+o
+l
+m
+l)
+i
+.
+sili, Izin
+Path: id Admin mengubah
+200 OK
+PUT /api/v1/kategori/{id}
+Body: {
+{ kategori
+informasi atau
+n
+d
+a
+e
+m
+sk
+a
+r
+K
+ip
+a
+s
+t
+i
+e
+,
+g
+is
+o
+A
+ri
+c
+,
+tive }
+updated }
+m
+lay
+en
+an
+o
+a
+n
+n
+a
+.
+k tifkan kategori
+Admin menghapus
+DELETE /api/v1/kategori/{id} Path: id
+{ m
+20
+e
+0
+s s
+O
+ag
+K
+e }
+k
+ji
+a
+k
+t
+a
+e g
+ti
+o
+d
+r
+a
+i
+k
+l a
+a
+y
+d
+a
+a
+n
+l
+a
+a
+n
+y a
+(h
+n
+a
+a
+n
+n
+y a
+aktif yang terkait).
+e. Laporan & Statistik (Admin Only)
+HTTP Endpoint URL Request Body / Param Response Deskripsi
+Method
+Mengambil ringkasan
+200 OK statistik seluruh
+GET /api/v1/dashboard/stats
+H
+(A
+e
+d
+a
+m
+de
+i
+r
+n
+:
+)
+B earer Token {
+s t
+t
+a
+o
+tu
+ta
+s
+l
+,
+,
+p
+p
+e
+e
+r
+r s
+p
+i
+e
+s
+n
+te
+g
+m
+ad
+:
+u
+to
+an
+ta
+,
+l
+t otal
+kategori } layanan, breakdown
+per status, dll.
+Halaman 15 dari 18
+Mengambil seluruh
+riwayat perubahan
+200 OK
+GET /api/v1/riwayat-status/{id}
+P
+pe
+a
+r
+th
+m
+:
+o
+i
+h
+d
+o
+(
+n
+U
+a
+U
+n/
+I
+p
+D
+e ngaduan)
+[ri
+{
+w
+d
+a
+a
+y
+t
+a
+a
+t
+:
+] }
+s
+p
+t
+e
+a
+n
+tu
+g
+s
+a d
+d
+u
+a
+a
+ri
+n
+s
+a
+a
+t
+t
+a
+u
+u
+layanan untuk
+keperluan audit trail.
+3.5 Alur Kerja Sistem (Workflow)
+Berikut adalah alur kerja utama penggunaan SmartPelayanan dari perspektif kedua
+aktor:
+Alur Pengajuan Pengaduan oleh Warga:
+1. Warga melakukan registrasi melalui POST /api/v1/auth/register.
+2. Warga login melalui POST /api/v1/auth/login dan mendapatkan JWT token.
+3. Warga mengajukan pengaduan melalui POST /api/v1/pengaduan dengan
+melampirkan detail masalah.
+4. Sistem otomatis menetapkan status = BARU dan menyimpan data ke
+database.
+5. Warga dapat memantau status pengaduan melalui GET
+/api/v1/pengaduan/{id}.
+Alur Penanganan Pengaduan oleh Admin:
+1. Admin login menggunakan akun admin dan mendapatkan JWT token.
+2. Admin melihat seluruh daftar pengaduan melalui GET /api/v1/pengaduan.
+3. Admin memproses pengaduan dan mengubah status menjadi DIPROSES
+melalui PATCH /api/v1/pengaduan/{id}/status.
+4. Admin menambahkan respon/tanggapan melalui POST
+/api/v1/pengaduan/{id}/respon.
+5. Setelah selesai ditangani, admin mengubah status menjadi SELESAI.
+Seluruh perubahan status tercatat di tb_riwayat_status.
+Halaman 16 dari 18
+BAB IV
+PENUTUP
+4.1 Kesimpulan
+SmartPelayanan (SPLM) adalah solusi backend digital yang dirancang untuk
+memodernisasi proses pengaduan dan pelayanan administrasi masyarakat. Melalui
+proposal ini, telah dijabarkan perancangan sistem yang komprehensif mencakup:
+• Latar belakang dan justifikasi kebutuhan sistem berbasis masalah pelayanan
+manual yang ada.
+• Landasan teori OOP (Encapsulation, Inheritance, Polymorphism,
+Abstraction) beserta penerapannya dalam Spring Boot.
+• Desain ERD dengan 6 tabel yang saling berelasi secara terstruktur dan
+ternormalisasi.
+• Rancangan Class Diagram dengan 10 class yang menerapkan pola Layered
+Architecture dan prinsip OOP secara konsisten.
+• Spesifikasi REST API yang mencakup 23 endpoint terkelompok dalam 5
+modul fungsional.
+Dengan rancangan yang terstruktur ini, implementasi sistem diharapkan dapat
+berjalan lancar dan memenuhi seluruh kriteria penilaian Ujian Tengah Semester
+Praktikum OOP.
+4.2 Rencana Implementasi
+Berikut adalah rencana tahapan implementasi sistem SmartPelayanan:
+Tahapan Target Waktu Aktivitas
+Tahap 1 Minggu 1 Setup proyek Spring Boot,
+konfigurasi database,
+implementasi BaseEntity, User
+entity, dan AuthController
+(Login & Register).
+Tahap 2 Minggu 2 Implementasi modul
+Pengaduan: Entity, Repository,
+Service Interface, ServiceImpl,
+dan Controller dengan operasi
+CRUD lengkap.
+Tahap 3 Minggu 3 Implementasi modul Layanan
+Administrasi,
+KategoriLayanan, dan
+ResponPengaduan beserta
+seluruh endpointnya.
+Tahap 4 Minggu 4 Implementasi RiwayatStatus,
+Dashboard Stats, pengujian
+end-to-end menggunakan
+Postman, dokumentasi API
+Halaman 17 dari 18
+(Swagger), dan refactoring
+kode.
+Demikian proposal perancangan sistem SmartPelayanan (SPLM) ini disusun.
+Kami berkomitmen untuk mengimplementasikan sistem ini sesuai rancangan yang
+telah diajukan dengan mengedepankan kualitas kode, penerapan OOP yang benar,
+dan dokumentasi yang memadai. Apabila terdapat masukan atau revisi dari dosen
+pengampu dan asisten laboratorium, kami siap melakukan penyesuaian.
+Bandung, 2026
+Tim SmartPelayanan — Kelompok [Nomor Kelompok]
+Halaman 18 dari 18

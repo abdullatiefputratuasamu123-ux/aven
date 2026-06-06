@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - SmartPelayanan</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="auth-body">
+    <div class="register-card-custom">
+        <div class="register-header">
+            <div class="logo-svg">
+                <svg width="48" height="56" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L3 5.5V13C3 18.5 6.8 23.5 12 25.5C13.5 24.9 14.9 24 16 22.8" stroke="#1e40af" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+                    <path d="M21 11V5.5L12 2" stroke="#1e40af" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+                    <circle cx="12" cy="11" r="2" fill="#1e40af"/>
+                    <path d="M16 18C16 15.8 14.2 14 12 14C9.8 14 8 15.8 8 18" fill="#1e40af"/>
+                    <circle cx="7" cy="12.5" r="1.5" fill="#1e40af"/>
+                    <path d="M9.5 18C9.5 16.3 8.2 15 6.5 15C4.8 15 3.5 16.3 3.5 18" fill="#1e40af"/>
+                    <circle cx="17" cy="12.5" r="1.5" fill="#1e40af"/>
+                    <path d="M20.5 18C20.5 16.3 19.2 15 17.5 15C16.8 15 16.1 15.2 15.6 15.6" fill="#1e40af"/>
+                    <path d="M12 21.5L16 25.5L24 17" stroke="#1e40af" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="register-header-text">
+                <h1>SmartPelayanan</h1>
+                <p>Sistem Pengaduan & Layanan Masyarakat</p>
+            </div>
+        </div>
+
+        <div class="register-title">
+            <h2>Daftar Akun Baru</h2>
+            <p>Buat akun untuk mengakses layanan pengaduan dan informasi publik.</p>
+        </div>
+
+        <div id="errorMsg" class="error-msg"></div>
+        <div id="successMsg" class="success-msg"></div>
+
+        <form id="registerForm">
+            <div class="form-group-custom">
+                <label>Nama Lengkap</label>
+                <div class="input-wrapper">
+                    <i class="far fa-user left-icon"></i>
+                    <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
+                </div>
+                <div class="field-error" id="namaError">Nama harus diisi</div>
+            </div>
+
+            <div class="form-group-custom">
+                <label>Email</label>
+                <div class="input-wrapper">
+                    <i class="far fa-envelope left-icon"></i>
+                    <input type="email" id="email" placeholder="Masukkan email" required>
+                </div>
+                <div class="field-error" id="emailError">Email tidak valid</div>
+            </div>
+
+            <div class="form-group-custom">
+                <label>Nomor Telepon</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-phone left-icon"></i>
+                    <input type="tel" id="telepon" placeholder="Masukkan nomor telepon" required>
+                </div>
+                <div class="field-error" id="teleponError">Nomor telepon harus diisi</div>
+            </div>
+
+            <div class="form-group-custom">
+                <label>Alamat</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-map-marker-alt left-icon"></i>
+                    <input type="text" id="alamat" placeholder="Masukkan alamat" required>
+                </div>
+                <div class="field-error" id="alamatError">Alamat harus diisi</div>
+            </div>
+
+            <div class="form-group-custom">
+                <label>Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock left-icon"></i>
+                    <input type="password" id="password" placeholder="Minimal 6 karakter" required>
+                    <i class="far fa-eye right-icon" id="togglePassword" onclick="togglePass()"></i>
+                </div>
+                <div class="field-error" id="passwordError">Password minimal 6 karakter</div>
+            </div>
+
+            <button type="submit" class="btn-daftar">Daftar</button>
+        </form>
+
+        <div class="divider-custom">
+            <hr><span>atau</span><hr>
+        </div>
+
+        <div class="auth-links-custom">
+            <span>Sudah punya akun? <a href="/login">Masuk di sini</a></span>
+        </div>
+
+        <a href="/public-pengaduan" class="btn-lapor-public" style="margin-top:12px">
+            <i class="fas fa-pen"></i> Laporkan Masalah Tanpa Login
+        </a>
+    </div>
+
+    <script>
+        function togglePass() {
+            const p = document.getElementById('password');
+            const i = document.getElementById('togglePassword');
+            if (p.type === 'password') {
+                p.type = 'text';
+                i.className = 'far fa-eye-slash right-icon';
+            } else {
+                p.type = 'password';
+                i.className = 'far fa-eye right-icon';
+            }
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.textContent = 'Mendaftarkan...';
+
+            const nama = document.getElementById('nama').value;
+            const email = document.getElementById('email').value;
+            const telepon = document.getElementById('telepon').value;
+            const alamat = document.getElementById('alamat').value;
+            const password = document.getElementById('password').value;
+
+            let valid = true;
+
+            if (!nama) { document.getElementById('namaError').style.display = 'block'; valid = false; }
+            else { document.getElementById('namaError').style.display = 'none'; }
+
+            if (!email || !email.includes('@')) { document.getElementById('emailError').style.display = 'block'; valid = false; }
+            else { document.getElementById('emailError').style.display = 'none'; }
+
+            if (!telepon) { document.getElementById('teleponError').style.display = 'block'; valid = false; }
+            else { document.getElementById('teleponError').style.display = 'none'; }
+
+            if (!alamat) { document.getElementById('alamatError').style.display = 'block'; valid = false; }
+            else { document.getElementById('alamatError').style.display = 'none'; }
+
+            if (!password || password.length < 6) { document.getElementById('passwordError').style.display = 'block'; valid = false; }
+            else { document.getElementById('passwordError').style.display = 'none'; }
+
+            if (!valid) { btn.disabled = false; btn.textContent = 'Daftar'; return; }
+
+            try {
+                const res = await fetch('/api/v1/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ namaLengkap: nama, email, noTelp: telepon, alamat, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    document.getElementById('successMsg').textContent = 'Pendaftaran berhasil! Mengalihkan ke login...';
+                    document.getElementById('successMsg').style.display = 'block';
+                    document.getElementById('errorMsg').style.display = 'none';
+                    setTimeout(() => window.location.href = '/login', 2000);
+                } else {
+                    document.getElementById('errorMsg').textContent = data.message || 'Pendaftaran gagal. Silakan coba lagi.';
+                    document.getElementById('errorMsg').style.display = 'block';
+                    document.getElementById('successMsg').style.display = 'none';
+                }
+            } catch (err) {
+                document.getElementById('errorMsg').textContent = 'Terjadi kesalahan. Silakan coba lagi.';
+                document.getElementById('errorMsg').style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Daftar';
+            }
+        });
+    </script>
+</body>
+</html>

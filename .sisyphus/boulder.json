@@ -1,0 +1,23 @@
+{
+  "active_plan": "C:\\Users\\MyBook Hype AMD\\Downloads\\prakoopp\\.sisyphus\\plans\\fitur-form-dinamis.md",
+  "started_at": "2026-05-14T14:26:20.796Z",
+  "session_ids": [
+    "ses_1d91e6282ffensUSsoen6DhLrE"
+  ],
+  "session_origins": {
+    "ses_1d91e6282ffensUSsoen6DhLrE": "direct"
+  },
+  "plan_name": "fitur-form-dinamis",
+  "agent": "atlas",
+  "task_sessions": {
+    "todo:4": {
+      "task_key": "todo:4",
+      "task_label": "4",
+      "task_title": "Update `DataInitializer.java` — seed 6 kategori dengan field default + `RiwayatStatusLayanan`",
+      "session_id": "ses_1d91709e2ffeXBtG0UOnfGeusW",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-05-14T14:34:29.517Z"
+    }
+  }
+}

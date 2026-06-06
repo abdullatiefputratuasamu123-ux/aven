@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - SmartPelayanan</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="top-navbar">
+        <div class="nav-brand">
+            <i class="fas fa-building brand-icon"></i>
+            <div class="brand-text">
+                <h2>SmartPelayanan</h2>
+                <p>Sistem Informasi Publik</p>
+            </div>
+        </div>
+        
+        <div class="nav-links">
+            <a class="nav-link active" id="nav-dashboard" onclick="showSection('dashboard')">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </a>
+            <a class="nav-link" id="nav-pengaduan" onclick="showSection('pengaduan')">
+                <i class="fas fa-exclamation-circle"></i> Pengaduan
+            </a>
+            <a class="nav-link" id="nav-layanan" onclick="showSection('layanan')">
+                <i class="fas fa-file-alt"></i> Layanan Administrasi
+            </a>
+            <a class="nav-link" id="nav-kategori" onclick="showSection('kategori')">
+                <i class="fas fa-tags"></i> Kategori Layanan
+            </a>
+            <a class="nav-link" id="nav-konfigurasiform" onclick="showSection('konfigurasiform')">
+                <i class="fas fa-wpforms"></i> Konfigurasi Form
+            </a>
+        </div>
+
+        <div class="nav-actions">
+            <!-- Notification Dropdown -->
+            <div style="position:relative;cursor:pointer" onclick="toggleNotifDropdown()">
+                <i class="fas fa-bell" style="font-size:20px;color:#64748b;transition:color 0.2s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#64748b'"></i>
+                <span id="notifBadge" style="display:none;position:absolute;top:-6px;right:-6px;background:#ef4444;color:white;border-radius:50%;width:16px;height:16px;font-size:10px;align-items:center;justify-content:center;font-weight:700;box-shadow:0 0 10px rgba(239, 68, 68, 0.3)">0</span>
+            </div>
+            
+            <div id="notifDropdown" style="display:none;position:absolute;top:60px;right:200px;width:340px;background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,0.1);z-index:1000;max-height:400px;overflow-y:auto">
+                <div style="padding:12px 16px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#ffffff;z-index:10;">
+                    <strong style="font-size:14px;color:#1e293b">Notifikasi</strong>
+                    <button onclick="markAllRead()" style="background:none;border:none;color:#2563eb;cursor:pointer;font-size:12px;font-weight:500;">Tandai semua dibaca</button>
+                </div>
+                <div id="notifList" style="padding:0">
+                    <div style="text-align:center;padding:20px;color:#64748b;font-size:13px">Memuat...</div>
+                </div>
+            </div>
+
+            <!-- User Profile -->
+            <div class="user-profile">
+                <div class="user-avatar" id="userAvatarNav">A</div>
+                <div class="user-info-nav">
+                    <span id="adminName">Admin</span>
+                    <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+            </div>
+            
+            <button class="btn-keluar" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Keluar
+            </button>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="page-header">
+            <h1 id="pageTitle">Dashboard</h1>
+            <p>Kelola sistem dan lihat statistik terbaru</p>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="section-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon blue"><i class="fas fa-exclamation-circle"></i></div>
+                        <div class="stat-info">
+                            <h3>Pengaduan Baru</h3>
+                            <div class="number" id="countBaru">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card-footer">
+                        <p>Pengaduan yang menunggu diproses</p>
+                        <div class="stat-arrow blue" onclick="showSection('pengaduan')"><i class="fas fa-arrow-right"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon green"><i class="fas fa-sync-alt"></i></div>
+                        <div class="stat-info">
+                            <h3>Sedang Diproses</h3>
+                            <div class="number green" id="countDiproses">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card-footer">
+                        <p>Pengaduan sedang ditindaklanjuti</p>
+                        <div class="stat-arrow green" onclick="showSection('pengaduan')"><i class="fas fa-arrow-right"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon purple"><i class="fas fa-file-alt"></i></div>
+                        <div class="stat-info">
+                            <h3>Total Layanan</h3>
+                            <div class="number purple" id="countLayanan">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card-footer">
+                        <p>Total layanan administrasi masuk</p>
+                        <div class="stat-arrow purple" onclick="showSection('layanan')"><i class="fas fa-arrow-right"></i></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-content">
+                        <div class="icon-wrapper blue"><i class="fas fa-clipboard-list"></i></div>
+                        <h2>Kelola Pengaduan</h2>
+                        <p>Tinjau, proses, dan perbarui status pengaduan warga yang masuk ke sistem dengan cepat.</p>
+                        <button class="btn-primary-action" onclick="showSection('pengaduan')">Kelola Pengaduan <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <div class="feature-illustration">
+                        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="20" y="30" width="120" height="90" rx="8" fill="#eff6ff" />
+                            <rect x="40" y="50" width="80" height="8" rx="4" fill="#bfdbfe" />
+                            <rect x="40" y="70" width="60" height="8" rx="4" fill="#bfdbfe" />
+                            <circle cx="150" cy="80" r="30" fill="#2563eb" opacity="0.9" />
+                            <path d="M140 80l6 6 14-14" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-content">
+                        <div class="icon-wrapper green"><i class="fas fa-file-signature"></i></div>
+                        <h2>Kelola Layanan</h2>
+                        <p>Verifikasi dokumen dan tangani permintaan layanan administrasi dari warga dengan efisien.</p>
+                        <button class="btn-primary-action" style="background:#10b981;" onclick="showSection('layanan')" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">Kelola Layanan <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <div class="feature-illustration">
+                        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="50" y="20" width="100" height="110" rx="8" fill="#ecfdf5" />
+                            <path d="M50 40h100M50 60h100" stroke="#a7f3d0" stroke-width="4" />
+                            <circle cx="100" cy="90" r="24" fill="#10b981" />
+                            <path d="M92 90l5 5 12-12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Pengaduan Terbaru</h2>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Judul</th>
+                                <th>Pelapor</th>
+                                <th>Lokasi</th>
+                                <th>Prioritas</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pengaduanTable">
+                            <tr><td colspan="6" class="loading">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pengaduan Section -->
+        <div id="pengaduanSection" class="section-content" style="display: none;">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Daftar Pengaduan</h2>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Judul</th>
+                                <th>Pelapor</th>
+                                <th>Lokasi</th>
+                                <th>Tanggal</th>
+                                <th>Prioritas</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pengaduanFullTable">
+                            <tr><td colspan="7" class="loading">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Layanan Section -->
+        <div id="layananSection" class="section-content" style="display: none;">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Daftar Layanan Administrasi</h2>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No. Permohonan</th>
+                                <th>Pemohon</th>
+                                <th>Kategori</th>
+                                <th>Keperluan</th>
+                                <th>Tanggal</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="layananTable">
+                            <tr><td colspan="7" class="loading">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kategori Section -->
+        <div id="kategoriSection" class="section-content" style="display: none;">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Daftar Kategori Layanan</h2>
+                    <button class="btn btn-primary" onclick="showKategoriModal()"><i class="fas fa-plus"></i> Tambah Kategori</button>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama Kategori</th>
+                                <th>Deskripsi</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kategoriTable">
+                            <tr><td colspan="5" class="loading">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Konfigurasi Form Section -->
+        <div id="konfigurasiformSection" class="section-content" style="display: none;">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Konfigurasi Field Form per Kategori</h2>
+                    <button class="btn btn-primary" onclick="showAddFieldModal()"><i class="fas fa-plus"></i> Tambah Field</button>
+                </div>
+                <div class="card-body">
+                    <div class="form-group" style="margin-bottom:20px">
+                        <label>Pilih Kategori:</label>
+                        <select id="konfigurasiformKategori" onchange="loadFieldsForKategori()" style="padding:8px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;min-width:250px">
+                            <option value="">-- Pilih Kategori --</option>
+                        </select>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Urutan</th>
+                                <th>Label</th>
+                                <th>Tipe</th>
+                                <th>Required</th>
+                                <th>Placeholder</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fieldFormTable">
+                            <tr><td colspan="6" class="empty-state">Pilih kategori untuk melihat field</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Pengaduan -->
+    <div class="modal" id="detailPengaduanModal">
+        <div class="modal-content" style="width:700px;max-width:95vw">
+            <div class="modal-header">
+                <h3>Detail Pengaduan</h3>
+                <button class="modal-close" onclick="closeModal('detailPengaduanModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="detailPengaduanBody" style="max-height:70vh;overflow-y:auto">
+                <div style="text-align:center;padding:30px;color:#999">Memuat...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background:#e1e1e1" onclick="closeModal('detailPengaduanModal')">Tutup</button>
+                <button class="btn btn-primary" id="btnExportPengaduanPdf" onclick="exportPengaduanPdf()"><i class="fas fa-file-pdf"></i> Export PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Layanan -->
+    <div class="modal" id="detailLayananModal">
+        <div class="modal-content" style="width:700px;max-width:95vw">
+            <div class="modal-header">
+                <h3>Detail Layanan</h3>
+                <button class="modal-close" onclick="closeModal('detailLayananModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="detailLayananBody" style="max-height:70vh;overflow-y:auto">
+                <div style="text-align:center;padding:30px;color:#999">Memuat...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background:#e1e1e1" onclick="closeModal('detailLayananModal')">Tutup</button>
+                <button class="btn btn-primary" id="btnExportLayananPdf" onclick="exportLayananPdf()"><i class="fas fa-file-pdf"></i> Export PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tambah/Edit Field Form -->
+    <div class="modal" id="fieldFormModal">
+        <div class="modal-content" style="width:500px">
+            <div class="modal-header">
+                <h3 id="fieldFormModalTitle">Tambah Field</h3>
+                <button class="modal-close" onclick="closeModal('fieldFormModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="fieldFormId">
+                <div class="form-group">
+                    <label>Label <span style="color:red">*</span></label>
+                    <input type="text" id="fieldFormLabel" placeholder="Nama field, contoh: NIK">
+                </div>
+                <div class="form-group">
+                    <label>Tipe <span style="color:red">*</span></label>
+                    <select id="fieldFormTipe" onchange="toggleOpsiField()">
+                        <option value="text">Text</option>
+                        <option value="number">Number</option>
+                        <option value="textarea">Textarea</option>
+                        <option value="select">Select (Pilihan)</option>
+                        <option value="date">Date</option>
+                        <option value="file">File Upload</option>
+                    </select>
+                </div>
+                <div class="form-group" id="opsiFieldGroup" style="display:none">
+                    <label>Opsi (satu per baris) <span style="color:red">*</span></label>
+                    <textarea id="fieldFormOpsi" rows="4" placeholder="Opsi 1&#10;Opsi 2&#10;Opsi 3"></textarea>
+                    <small style="color:#666">Masukkan setiap opsi di baris baru</small>
+                </div>
+                <div class="form-group">
+                    <label>Placeholder</label>
+                    <input type="text" id="fieldFormPlaceholder" placeholder="Teks bantuan untuk pengguna">
+                </div>
+                <div class="form-group">
+                    <label>Urutan</label>
+                    <input type="number" id="fieldFormUrutan" value="0" min="0">
+                </div>
+                <div class="form-group">
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                        <input type="checkbox" id="fieldFormRequired" checked style="width:16px;height:16px">
+                        Wajib diisi (Required)
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background:#e1e1e1" onclick="closeModal('fieldFormModal')">Batal</button>
+                <button class="btn btn-primary" onclick="submitFieldForm()">Simpan</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Status Modal -->
+    <div class="modal" id="statusModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Update Status</h3>
+                <button class="modal-close" onclick="closeModal('statusModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="statusItemId">
+                <input type="hidden" id="statusItemType">
+                <div class="form-group">
+                    <label>Status Baru</label>
+                    <select id="newStatus">
+                        <option value="BARU">BARU</option>
+                        <option value="DIPROSES">DIPROSES</option>
+                        <option value="SELESAI">SELESAI</option>
+                        <option value="DITOLAK">DITOLAK</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Catatan</label>
+                    <textarea id="statusCatatan" rows="3" placeholder="Masukkan catatan..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background: #e1e1e1;" onclick="closeModal('statusModal')">Batal</button>
+                <button class="btn btn-primary" onclick="submitStatus()">Simpan</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Kategori Modal -->
+    <div class="modal" id="kategoriModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="kategoriModalTitle">Tambah Kategori</h3>
+                <button class="modal-close" onclick="closeModal('kategoriModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="kategoriId">
+                <div class="form-group">
+                    <label>Nama Kategori</label>
+                    <input type="text" id="kategoriNama" placeholder="Masukkan nama kategori">
+                </div>
+                <div class="form-group">
+                    <label>Deskripsi</label>
+                    <textarea id="kategoriDeskripsi" rows="3" placeholder="Masukkan deskripsi"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background: #e1e1e1;" onclick="closeModal('kategoriModal')">Batal</button>
+                <button class="btn btn-primary" onclick="submitKategori()">Simpan</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content" style="width: 400px;">
+            <div class="modal-header">
+                <h3>Konfirmasi Hapus</h3>
+                <button class="modal-close" onclick="closeModal('deleteModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin menghapus data ini?</p>
+                <input type="hidden" id="deleteItemId">
+                <input type="hidden" id="deleteItemType">
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="background: #e1e1e1;" onclick="closeModal('deleteModal')">Batal</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightboxModal" onclick="if(event.target===this) closeLightbox()">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <img id="lightboxImg" src="" alt="Foto Bukti">
+    </div>
+
+    <script>
+        var token = localStorage.getItem('token');
+        var role = localStorage.getItem('role');
+        
+        if (!token || role !== 'ADMIN') {
+            window.location.href = '/login';
+        }
+        
+        var authHeaders = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+        var adminName = localStorage.getItem('namaLengkap') || 'Admin';
+        document.getElementById('adminName').textContent = adminName;
+        if (document.getElementById('userAvatarNav')) document.getElementById('userAvatarNav').textContent = adminName[0];
+        
+        var allPengaduan = [];
+        var allLayanan = [];
+        var allKategori = [];
+        var currentPengaduanId = null;
+        var currentLayananId = null;
+        var currentKonfigurasiformKategoriId = null;
+
+        function showToast(message, type) {
+            var prefix = type === 'success' ? 'Berhasil' : (type === 'warning' ? 'Perhatian' : 'Gagal');
+            alert(prefix + ': ' + message);
+        }
+
+        function downloadPdf(url, filename) {
+            fetch(url, { headers: { 'Authorization': 'Bearer ' + token } })
+                .then(function(res) {
+                    if (!res.ok) throw new Error('Gagal mengunduh PDF');
+                    return res.blob();
+                })
+                .then(function(blob) {
+                    var link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                    link.remove();
+                })
+                .catch(function() { showToast('Gagal mengunduh PDF', 'error'); });
+        }
+
+        function renderRiwayatStatus(riwayat) {
+            if (!riwayat || riwayat.length === 0) return '';
+            var h = '<div style="margin-bottom:12px"><strong>Riwayat Status:</strong><table style="width:100%;border-collapse:collapse;margin-top:8px">';
+            h += '<tr style="background:#f0f0f0"><th style="padding:8px;text-align:left">Dari</th><th style="padding:8px;text-align:left">Ke</th><th style="padding:8px;text-align:left">Catatan</th><th style="padding:8px;text-align:left">Oleh</th><th style="padding:8px;text-align:left">Tanggal</th></tr>';
+            for (var r = 0; r < riwayat.length; r++) {
+                var rs = riwayat[r];
+                var waktu = rs.tanggal || rs.waktu;
+                var tgl = waktu ? new Date(waktu).toLocaleString('id-ID') : '-';
+                h += '<tr><td style="padding:8px">' + (rs.statusLama || '-') + '</td><td style="padding:8px">' + (rs.statusBaru || '-') + '</td><td style="padding:8px">' + (rs.catatan || '-') + '</td><td style="padding:8px">' + (rs.diubahOleh || '-') + '</td><td style="padding:8px">' + tgl + '</td></tr>';
+            }
+            return h + '</table></div>';
+        }
+
+        // ---- Navigation ----
+        function showSection(section) {
+            document.querySelectorAll('.nav-link').forEach(function(m) { m.classList.remove('active'); });
+            document.querySelectorAll('.section-content').forEach(function(s) { s.style.display = 'none'; });
+            var activeNav = document.getElementById('nav-' + section);
+            if (activeNav) activeNav.classList.add('active');
+            var sectionEl = document.getElementById(section + 'Section');
+            if (sectionEl) sectionEl.style.display = 'block';
+            var titles = { 'dashboard': 'Dashboard', 'pengaduan': 'Daftar Pengaduan', 'layanan': 'Daftar Layanan Administrasi', 'kategori': 'Kategori Layanan', 'konfigurasiform': 'Konfigurasi Form' };
+            document.getElementById('pageTitle').textContent = titles[section] || 'Dashboard';
+            if (section === 'dashboard') loadDashboard();
+            if (section === 'pengaduan') loadPengaduanFull();
+            if (section === 'layanan') loadLayanan();
+            if (section === 'kategori') loadKategori();
+            if (section === 'konfigurasiform') loadKonfigurasiform();
+        }
+
+        function logout() { localStorage.clear(); window.location.href = '/login'; }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function openLightbox(url) { document.getElementById('lightboxImg').src = url; document.getElementById('lightboxModal').style.display = 'flex'; }
+        function closeLightbox() { document.getElementById('lightboxModal').style.display = 'none'; }
+
+        // ---- Dashboard ----
+        function loadDashboard() {
+            Promise.all([
+                fetch('/api/v1/admin/pengaduan', { headers: authHeaders }).then(function(r) { return r.json(); }),
+                fetch('/api/v1/admin/layanan', { headers: authHeaders }).then(function(r) { return r.json(); })
+            ]).then(function(results) {
+                allPengaduan = results[0].data || [];
+                allLayanan = results[1].data || [];
+                document.getElementById('countBaru').textContent = allPengaduan.filter(function(p) { return p.status === 'BARU'; }).length;
+                document.getElementById('countDiproses').textContent = allPengaduan.filter(function(p) { return p.status === 'DIPROSES'; }).length;
+                document.getElementById('countLayanan').textContent = allLayanan.length;
+                var tbody = document.getElementById('pengaduanTable');
+                if (allPengaduan.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><i class="fas fa-inbox" style="font-size:20px;display:block;margin-bottom:6px;opacity:0.4;"></i>Belum ada pengaduan yang masuk</td></tr>'; return; }
+                var rows = '';
+                var recent = allPengaduan.slice(0, 5);
+                for (var i = 0; i < recent.length; i++) {
+                    var p = recent[i];
+                    var pelapor = p.user ? (p.user.namaLengkap || 'Publik') : 'Publik';
+                    var prioritas = (p.prioritas || 'SEDANG').toLowerCase();
+                    rows += '<tr>';
+                    rows += '<td>' + (p.judul || '-') + '</td>';
+                    rows += '<td>' + pelapor + '</td>';
+                    rows += '<td>' + (p.lokasi || '-') + '</td>';
+                    rows += '<td><span class="priority-badge priority-' + prioritas + '">' + (p.prioritas || '-') + '</span></td>';
+                    rows += '<td><span class="status-badge status-' + p.status + '">' + (p.status || '-') + '</span></td>';
+                    rows += '<td><button class="btn btn-sm btn-primary" onclick="lihatDetailPengaduan(\'' + p.id + '\')"><i class="fas fa-eye"></i></button></td>';
+                    rows += '</tr>';
+                }
+                tbody.innerHTML = rows;
+            }).catch(function(e) { console.error('loadDashboard:', e); });
+        }
+
+        // ---- Pengaduan ----
+        function loadPengaduanFull() {
+            fetch('/api/v1/admin/pengaduan', { headers: authHeaders }).then(function(r) { return r.json(); }).then(function(data) {
+                allPengaduan = data.data || [];
+                var tbody = document.getElementById('pengaduanFullTable');
+                if (allPengaduan.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Belum ada pengaduan yang masuk</td></tr>'; return; }
+                var rows = '';
+                for (var i = 0; i < allPengaduan.length; i++) {
+                    var p = allPengaduan[i];
+                    var pelapor = p.user ? (p.user.namaLengkap || 'Publik') : 'Publik';
+                    var prioritas = (p.prioritas || 'SEDANG').toLowerCase();
+                    rows += '<tr>';
+                    rows += '<td>' + (p.judul || '-') + '</td>';
+                    rows += '<td>' + pelapor + '</td>';
+                    rows += '<td>' + (p.lokasi || '-') + '</td>';
+                    rows += '<td>' + (p.tanggalKejadian || '-') + '</td>';
+                    rows += '<td><span class="priority-badge priority-' + prioritas + '">' + (p.prioritas || '-') + '</span></td>';
+                    rows += '<td><span class="status-badge status-' + p.status + '">' + (p.status || '-') + '</span></td>';
+                    rows += '<td>';
+                    rows += '<button class="btn btn-sm btn-primary" onclick="lihatDetailPengaduan(\'' + p.id + '\')" title="Detail"><i class="fas fa-eye"></i></button> ';
+                    rows += '<button class="btn btn-sm btn-warning" onclick="showStatusModal(\'' + p.id + '\', \'pengaduan\')" title="Update Status"><i class="fas fa-sync-alt"></i></button>';
+                    rows += '</td></tr>';
+                }
+                tbody.innerHTML = rows;
+            }).catch(function(e) { console.error('loadPengaduanFull:', e); });
+        }
+
+        function lihatDetailPengaduan(id) {
+            currentPengaduanId = id;
+            document.getElementById('detailPengaduanBody').innerHTML = '<div style="text-align:center;padding:30px;color:#999">Memuat...</div>';
+            document.getElementById('detailPengaduanModal').classList.add('active');
+            fetch('/api/v1/pengaduan/' + id + '/detail', { headers: authHeaders }).then(function(r) { return r.json(); }).then(function(data) {
+                var d = data.data;
+                var h = '<table style="width:100%;border-collapse:collapse;margin-bottom:16px">';
+                h += '<tr><td style="padding:8px;font-weight:600;width:35%;color:#555">ID</td><td style="padding:8px">' + (d.id || '-') + '</td></tr>';
+                h += '<tr style="background:#f9f9f9"><td style="padding:8px;font-weight:600;color:#555">Judul</td><td style="padding:8px">' + (d.judul || '-') + '</td></tr>';
+                h += '<tr><td style="padding:8px;font-weight:600;color:#555">Status</td><td style="padding:8px"><span class="status-badge status-' + d.status + '">' + (d.status || '-') + '</span></td></tr>';
+                h += '<tr style="background:#f9f9f9"><td style="padding:8px;font-weight:600;color:#555">Prioritas</td><td style="padding:8px">' + (d.prioritas || '-') + '</td></tr>';
+                h += '<tr><td style="padding:8px;font-weight:600;color:#555">Tanggal Kejadian</td><td style="padding:8px">' + (d.tanggalKejadian || '-') + '</td></tr>';
+                h += '<tr style="background:#f9f9f9"><td style="padding:8px;font-weight:600;color:#555">Lokasi</td><td style="padding:8px">' + (d.lokasi || '-') + '</td></tr>';
+                h += '<tr><td style="padding:8px;font-weight:600;color:#555">Deskripsi</td><td style="padding:8px">' + (d.deskripsi || '-') + '</td></tr>';
+                h += '<tr style="background:#f9f9f9"><td style="padding:8px;font-weight:600;color:#555">Pelapor</td><td style="padding:8px">' + (d.user ? (d.user.namaLengkap || 'Publik') : 'Publik') + '</td></tr>';
+                h += '<tr><td style="padding:8px;font-weight:600;color:#555">Email</td><td style="padding:8px">' + (d.user ? (d.user.email || '-') : '-') + '</td></tr>';
+                h += '</table>';
+
+                // Tampilkan fotoBukti dari entity Pengaduan
+                if (d.fotoBukti) {
+                    h += '<div style="margin-bottom:12px"><strong>Foto Bukti:</strong><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:10px">';
+                    if (/\.(jpg|jpeg|png|gif|webp)$/i.test(d.fotoBukti || '')) {
+                        h += '<div style="text-align:center"><img src="' + d.fotoBukti + '" style="max-width:200px;max-height:200px;border-radius:8px;cursor:zoom-in;object-fit:cover" onclick="openLightbox(\'' + d.fotoBukti + '\')"></div>';
+                    } else {
+                        h += '<div><a href="' + d.fotoBukti + '" target="_blank"><i class="fas fa-file"></i> Lihat Foto</a></div>';
+                    }
+                    h += '</div></div>';
+                }
+
+                // Tampilkan lampiran files
+                if (d.lampiran && d.lampiran.length > 0) {
+                    h += '<div style="margin-bottom:12px"><strong>Lampiran:</strong><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:10px">';
+                    for (var i = 0; i < d.lampiran.length; i++) {
+                        var l = d.lampiran[i];
+                        if (/\.(jpg|jpeg|png|gif|webp)$/i.test(l.urlFile || l.fileUrl || '')) {
+                            var imgUrl = l.urlFile || l.fileUrl;
+                            h += '<div style="text-align:center"><img src="' + imgUrl + '" style="max-width:120px;max-height:120px;border-radius:8px;cursor:zoom-in;object-fit:cover" onclick="openLightbox(\'' + imgUrl + '\')"><div style="font-size:11px;color:#666;margin-top:4px">' + l.namaFile + '</div></div>';
+                        } else {
+                            var fileUrl = l.urlFile || l.fileUrl;
+                            h += '<div><a href="' + fileUrl + '" target="_blank"><i class="fas fa-file"></i> ' + (l.namaFile || 'File') + '</a></div>';
+                        }
+                    }
+                    h += '</div></div>';
+                }
+                h += renderRiwayatStatus(d.riwayatStatus);
+                document.getElementById('detailPengaduanBody').innerHTML = h;
+            }).catch(function(e) {
+                document.getElementById('detailPengaduanBody').innerHTML = '<div style="color:red;padding:20px">Gagal memuat detail</div>';
+            });
+        }
+
+        function exportPengaduanPdf() {
+            if (currentPengaduanId) downloadPdf('/api/v1/laporan/pengaduan/' + currentPengaduanId + '/pdf', 'laporan-pengaduan-' + currentPengaduanId + '.pdf');
+        }
+
+        // ---- Layanan ----
+        function loadLayanan() {
+            fetch('/api/v1/admin/layanan', { headers: authHeaders }).then(function(r) { return r.json(); }).then(function(data) {
+                allLayanan = data.data || [];
+                var tbody = document.getElementById('layananTable');
+                if (allLayanan.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Belum ada permohonan layanan masuk</td></tr>'; return; }
+                var rows = '';
+                for (var i = 0; i < allLayanan.length; i++) {
+                    var l = allLayanan[i];
+                    var pemohon = l.user ? (l.user.namaLengkap || '-') : '-';
+                    var kategori = l.kategori ? (l.kategori.namaKategori || '-') : '-';
+                    rows += '<tr>';
+                    rows += '<td>' + (l.nomorPermohonan || '-') + '</td>';
+                    rows += '<td>' + pemohon + '</td>';
+                    rows += '<td>' + kategori + '</td>';
+                    rows += '<td>' + (l.keperluan || '-') + '</td>';
+                    rows += '<td>' + (l.tglDiajukan || '-') + '</td>';
+                    rows += '<td><span class="status-badge status-' + l.status + '">' + (l.status || '-') + '</span></td>';
+                    rows += '<td>';
+                    rows += '<button class="btn btn-sm btn-primary" onclick="lihatDetailLayanan(\'' + l.id + '\')" title="Detail"><i class="fas fa-eye"></i></button> ';
+                    rows += '<button class="btn btn-sm btn-warning" onclick="showStatusModal(\'' + l.id + '\', \'layanan\')" title="Update Status"><i class="fas fa-sync-alt"></i></button>';
+                    rows += '</td></tr>';
+                }
+                tbody.innerHTML = rows;
+            }).catch(function(e) { console.error('loadLayanan:', e); });
+        }
+
+        function lihatDetailLayanan(id) {
+            currentLayananId = id;
+            document.getElementById('detailLayananBody').innerHTML = '<div style="text-align:center;padding:30px;color:#999">Memuat...</div>';
+            document.getElementById('detailLayananModal').classList.add('active');
+            fetch('/api/v1/layanan/' + id + '/detail', { headers: authHeaders }).then(function(r) { return r.json(); }).then(function(data) {
+                var d = data.data;
+                var h = '<table style="width:100%;border-collapse:collapse;margin-bottom:16px">';
+                h += '<tr><td style="padding:8px;font-weight:600;width:35%;color:#555">No. Permohonan</td><td style="padding:8px">' + (d.nomorPermohonan || '-') + '</td></tr>';
+                h += '<tr style="background:#f9f9f9"><td style="padding:8px;font-weight:600;color:#555">Status</td><td style="padding:8px"><span class="status-badge status-' + d.status + '">' + (d.status || '-') + '</span></td></tr>';
+                h += '<tr><td style="padding:8px;font-weight:600;color:#555">Kategori</td><td style="padding:8px">' + (d.kategori ? (d.kategori.namaKategori || '-') : '-') + '</td></tr>';
+                h += '<tr style="background:#f9f9f9"><td style="padding:8px;font-weight:600;color:#555">Tanggal Diajukan</td><td style="padding:8px">' + (d.tglDiajukan || '-') + '</td></tr>';
+                h += '<tr><td style="padding:8px;font-weight:600;color:#555">Pemohon</td><td style="padding:8px">' + (d.user ? (d.user.namaLengkap || '-') : '-') + '</td></tr>';
+                h += '<tr style="background:#f9f9f9"><td style="padding:8px;font-weight:600;color:#555">Email</td><td style="padding:8px">' + (d.user ? (d.user.email || '-') : '-') + '</td></tr>';
+                h += '<tr><td style="padding:8px;font-weight:600;color:#555">No. Telepon</td><td style="padding:8px">' + (d.user ? (d.user.noTelp || '-') : '-') + '</td></tr>';
+                h += '</table>';
+                if (d.jawaban && d.jawaban.length > 0) {
+                    h += '<div style="margin-bottom:12px"><strong>Data Form:</strong><table style="width:100%;border-collapse:collapse;margin-top:8px">';
+                    for (var j = 0; j < d.jawaban.length; j++) {
+                        var jw = d.jawaban[j];
+                        var bg = j % 2 === 0 ? 'white' : '#f9f9f9';
+                        var val = jw.tipe === 'file' ? '<a href="' + jw.nilai + '" target="_blank">' + (jw.nilai || '-') + '</a>' : (jw.nilai || '-');
+                        h += '<tr style="background:' + bg + '"><td style="padding:8px;font-weight:600;color:#555;width:40%">' + (jw.label || '-') + '</td><td style="padding:8px">' + val + '</td></tr>';
+                    }
+                    h += '</table></div>';
+                }
+                if (d.lampiran && d.lampiran.length > 0) {
+                    h += '<div style="margin-bottom:12px"><strong>Lampiran:</strong><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:10px">';
+                    for (var k = 0; k < d.lampiran.length; k++) {
+                        var l = d.lampiran[k];
+                        if (/\.(jpg|jpeg|png|gif|webp)$/i.test(l.urlFile || '')) {
+                            h += '<div style="text-align:center"><img src="' + l.urlFile + '" style="max-width:120px;max-height:120px;border-radius:8px;cursor:zoom-in;object-fit:cover" onclick="openLightbox(\'' + l.urlFile + '\')"><div style="font-size:11px;color:#666;margin-top:4px">' + l.namaFile + '</div></div>';
+                        } else {
+                            h += '<div><a href="' + l.urlFile + '" target="_blank"><i class="fas fa-file"></i> ' + l.namaFile + '</a></div>';
+                        }
+                    }
+                    h += '</div></div>';
+                }
+                if (d.catatanPetugas) h += '<div style="margin-bottom:12px"><strong>Catatan Petugas:</strong><p style="margin-top:6px;padding:10px;background:#fff3cd;border-radius:6px">' + d.catatanPetugas + '</p></div>';
+                h += renderRiwayatStatus(d.riwayatStatus);
+                document.getElementById('detailLayananBody').innerHTML = h;
+            }).catch(function(e) {
+                document.getElementById('detailLayananBody').innerHTML = '<div style="color:red;padding:20px">Gagal memuat detail</div>';
+            });
+        }
+
+        function exportLayananPdf() {
+            if (currentLayananId) downloadPdf('/api/v1/laporan/layanan/' + currentLayananId + '/pdf', 'laporan-layanan-' + currentLayananId + '.pdf');
+        }
+
+        // ---- Status Update ----
+        function showStatusModal(id, type) {
+            document.getElementById('statusItemId').value = id;
+            document.getElementById('statusItemType').value = type;
+            document.getElementById('newStatus').value = 'BARU';
+            document.getElementById('statusCatatan').value = '';
+            document.getElementById('statusModal').classList.add('active');
+        }
+
+        function submitStatus() {
+            var id = document.getElementById('statusItemId').value;
+            var type = document.getElementById('statusItemType').value;
+            var status = document.getElementById('newStatus').value;
+            var catatan = document.getElementById('statusCatatan').value;
+            var body = type === 'pengaduan'
+                ? { status: status, catatanAdmin: catatan }
+                : { status: status, catatanPetugas: catatan };
+            fetch('/api/v1/admin/' + type + '/' + id + '/status', {
+                method: 'PATCH', headers: authHeaders, body: JSON.stringify(body)
+            }).then(function(r) {
+                if (r.ok) {
+                    showToast('Status berhasil diperbarui', 'success');
+                    closeModal('statusModal');
+                    if (type === 'pengaduan') { loadPengaduanFull(); loadDashboard(); }
+                    else loadLayanan();
+                } else { showToast('Gagal memperbarui status', 'error'); }
+            }).catch(function() { showToast('Gagal memperbarui status', 'error'); });
+        }
+
+        // ---- Kategori ----
+        function loadKategori() {
+            fetch('/api/v1/admin/kategori', { headers: authHeaders }).then(function(r) { return r.json(); }).then(function(data) {
+                allKategori = data.data || [];
+                var tbody = document.getElementById('kategoriTable');
+                if (allKategori.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Belum ada kategori layanan. Tambahkan kategori baru untuk mulai.</td></tr>'; return; }
+                var rows = '';
+                for (var i = 0; i < allKategori.length; i++) {
+                    var k = allKategori[i];
+                    var nama = (k.namaKategori || '').replace(/'/g, "\\'");
+                    var desc = (k.deskripsi || '').replace(/'/g, "\\'");
+                    rows += '<tr>';
+                    rows += '<td>' + (k.id || '-') + '</td>';
+                    rows += '<td>' + (k.namaKategori || '-') + '</td>';
+                    rows += '<td>' + (k.deskripsi || '-') + '</td>';
+                    rows += '<td><span class="status-badge status-' + (k.isActive ? 'SELESAI' : 'DITOLAK') + '">' + (k.isActive ? 'Aktif' : 'Nonaktif') + '</span></td>';
+                    rows += '<td>';
+                    rows += '<button class="btn btn-sm btn-primary" onclick="editKategori(' + k.id + ',\'' + nama + '\',\'' + desc + '\')" title="Edit"><i class="fas fa-edit"></i></button> ';
+                    rows += '<button class="btn btn-sm btn-danger" onclick="showDeleteModal(\'kategori\',' + k.id + ')" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    rows += '</td></tr>';
+                }
+                tbody.innerHTML = rows;
+            }).catch(function(e) { console.error('loadKategori:', e); });
+        }
+
+        function showKategoriModal() {
+            document.getElementById('kategoriModalTitle').textContent = 'Tambah Kategori';
+            document.getElementById('kategoriId').value = '';
+            document.getElementById('kategoriNama').value = '';
+            document.getElementById('kategoriDeskripsi').value = '';
+            document.getElementById('kategoriModal').classList.add('active');
+        }
+
+        function editKategori(id, nama, deskripsi) {
+            document.getElementById('kategoriModalTitle').textContent = 'Edit Kategori';
+            document.getElementById('kategoriId').value = id;
+            document.getElementById('kategoriNama').value = nama;
+            document.getElementById('kategoriDeskripsi').value = deskripsi;
+            document.getElementById('kategoriModal').classList.add('active');
+        }
+
+        function submitKategori() {
+            var id = document.getElementById('kategoriId').value;
+            var nama = document.getElementById('kategoriNama').value.trim();
+            var deskripsi = document.getElementById('kategoriDeskripsi').value.trim();
+            if (!nama) { showToast('Nama kategori wajib diisi', 'error'); return; }
+            var method = id ? 'PUT' : 'POST';
+            var url = id ? '/api/v1/admin/kategori/' + id : '/api/v1/admin/kategori';
+            fetch(url, { method: method, headers: authHeaders, body: JSON.stringify({ namaKategori: nama, deskripsi: deskripsi }) })
+            .then(function(r) {
+                if (r.ok) { showToast('Kategori berhasil disimpan', 'success'); closeModal('kategoriModal'); loadKategori(); }
+                else showToast('Gagal menyimpan kategori', 'error');
+            }).catch(function() { showToast('Gagal menyimpan kategori', 'error'); });
+        }
+
+        // ---- Delete ----
+        function showDeleteModal(type, id) {
+            document.getElementById('deleteItemType').value = type;
+            document.getElementById('deleteItemId').value = id;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function confirmDelete() {
+            var type = document.getElementById('deleteItemType').value;
+            var id = document.getElementById('deleteItemId').value;
+            fetch('/api/v1/admin/' + type + '/' + id, { method: 'DELETE', headers: authHeaders })
+            .then(function(r) {
+                if (r.ok) {
+                    showToast('Data berhasil dihapus', 'success');
+                    closeModal('deleteModal');
+                    if (type === 'kategori') loadKategori();
+                    else if (type === 'pengaduan') { loadPengaduanFull(); loadDashboard(); }
+                } else showToast('Gagal menghapus data', 'error');
+            }).catch(function() { showToast('Gagal menghapus data', 'error'); });
+        }
+
+        // ---- Notifikasi ----
+        function toggleNotifDropdown() {
+            var dd = document.getElementById('notifDropdown');
+            if (dd.style.display === 'none') { dd.style.display = 'block'; loadNotifikasi(); }
+            else dd.style.display = 'none';
+        }
+
+        function loadNotifikasi() {
+            fetch('/api/v1/notifikasi', { headers: authHeaders }).then(function(r) { return r.json(); }).then(function(result) {
+                var list = result.data || [];
+                var container = document.getElementById('notifList');
+                var badge = document.getElementById('notifBadge');
+                var unread = list.filter(function(n) { return !n.sudahDibaca; }).length;
+                if (unread > 0) { badge.style.display = 'flex'; badge.textContent = unread; }
+                else badge.style.display = 'none';
+                if (list.length === 0) { container.innerHTML = '<div style="text-align:center;padding:20px;color:#64748b;font-size:13px">Tidak ada notifikasi</div>'; return; }
+                var html = '';
+                for (var i = 0; i < list.length; i++) {
+                    var n = list[i];
+                    var bg = n.sudahDibaca ? '' : 'background:#eff6ff;';
+                    var fw = n.sudahDibaca ? '400' : '600';
+                    html += '<div style="padding:10px 16px;border-bottom:1px solid #f1f5f9;cursor:pointer;' + bg + '" onclick="markNotifRead(\'' + n.id + '\',this,\'' + (n.tipe || '') + '\',\'' + (n.referensiId || '') + '\')">';
+                    html += '<div style="font-weight:' + fw + ';font-size:13px;color:#1e293b">' + (n.judul || '') + '</div>';
+                    html += '<div style="font-size:12px;color:#64748b;margin-top:2px">' + (n.pesan || '') + '</div>';
+                    html += '<div style="font-size:11px;color:#9ca3af;margin-top:4px;font-weight:500;">' + (n.createdAt ? new Date(n.createdAt).toLocaleString('id-ID') : '') + '</div>';
+                    html += '</div>';
+                }
+                container.innerHTML = html;
+            }).catch(function(e) { console.error('loadNotifikasi:', e); });
+        }
+
+        function markNotifRead(id, el, tipe, referensiId) {
+            fetch('/api/v1/notifikasi/' + id + '/read', { method: 'PATCH', headers: authHeaders })
+            .then(function() {
+                if (el) el.style.background = 'white';
+                return fetch('/api/v1/notifikasi/unread-count', { headers: authHeaders });
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(result) {
+                var badge = document.getElementById('notifBadge');
+                var count = result.data ? (result.data.count || 0) : 0;
+                if (count > 0) { badge.style.display = 'flex'; badge.textContent = count; }
+                else badge.style.display = 'none';
+                // Navigate to detail based on tipe
+                if (referensiId) {
+                    document.getElementById('notifDropdown').style.display = 'none';
+                    if (tipe === 'PENGADUAN_BARU' || tipe === 'STATUS_PENGADUAN') {
+                        showSection('pengaduan');
+                        setTimeout(function() { lihatDetailPengaduan(referensiId); }, 300);
+                    } else if (tipe === 'LAYANAN_BARU' || tipe === 'STATUS_LAYANAN') {
+                        showSection('layanan');
+                        setTimeout(function() { lihatDetailLayanan(referensiId); }, 300);
+                    }
+                }
+            }).catch(function() {});
+        }
+
+        function markAllRead() {
+            fetch('/api/v1/notifikasi/read-all', { method: 'PATCH', headers: authHeaders })
+            .then(function() {
+                document.getElementById('notifBadge').style.display = 'none';
+                loadNotifikasi();
+            }).catch(function() {});
+        }
+
+        // ---- Konfigurasi Form ----
+        function loadKonfigurasiform() {
+            fetch('/api/v1/admin/kategori', { headers: authHeaders }).then(function(r) { return r.json(); }).then(function(data) {
+                var kategoris = data.data || [];
+                var sel = document.getElementById('konfigurasiformKategori');
+                sel.innerHTML = '<option value="">-- Pilih Kategori --</option>';
+                for (var i = 0; i < kategoris.length; i++) {
+                    sel.innerHTML += '<option value="' + kategoris[i].id + '">' + kategoris[i].namaKategori + '</option>';
+                }
+            }).catch(function() {});
+        }
+
+        function loadFieldsForKategori() {
+            var kategoriId = document.getElementById('konfigurasiformKategori').value;
+            currentKonfigurasiformKategoriId = kategoriId;
+            var tbody = document.getElementById('fieldFormTable');
+            if (!kategoriId) { tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Pilih kategori untuk melihat field</td></tr>'; return; }
+            fetch('/api/v1/kategori/' + kategoriId + '/fields', { headers: authHeaders }).then(function(r) { return r.json(); }).then(function(data) {
+                var fields = data.data || [];
+                if (fields.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Belum ada field untuk kategori ini</td></tr>'; return; }
+                var rows = '';
+                for (var i = 0; i < fields.length; i++) {
+                    var f = fields[i];
+                    var opsiStr = f.opsi ? f.opsi.replace(/'/g, "\\'") : '';
+                    rows += '<tr>';
+                    rows += '<td>' + (f.urutan || 0) + '</td>';
+                    rows += '<td>' + (f.label || '-') + '</td>';
+                    rows += '<td>' + (f.tipe || '-') + '</td>';
+                    rows += '<td>' + (f.required ? 'Ya' : 'Tidak') + '</td>';
+                    rows += '<td>' + (f.placeholder || '-') + '</td>';
+                    rows += '<td>';
+                    rows += '<button class="btn btn-sm btn-primary" onclick="editField(' + f.id + ',\'' + (f.label || '').replace(/'/g, "\\'") + '\',\'' + (f.tipe || '') + '\',' + f.required + ',' + (f.urutan || 0) + ',\'' + (f.placeholder || '').replace(/'/g, "\\'") + '\',\'' + opsiStr + '\')" title="Edit"><i class="fas fa-edit"></i></button> ';
+                    rows += '<button class="btn btn-sm btn-danger" onclick="deleteField(' + f.id + ')" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    rows += '</td></tr>';
+                }
+                tbody.innerHTML = rows;
+            }).catch(function() { tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Gagal memuat field</td></tr>'; });
+        }
+
+        function showAddFieldModal() {
+            if (!currentKonfigurasiformKategoriId) { showToast('Pilih kategori terlebih dahulu', 'warning'); return; }
+            document.getElementById('fieldFormModalTitle').textContent = 'Tambah Field';
+            document.getElementById('fieldFormId').value = '';
+            document.getElementById('fieldFormLabel').value = '';
+            document.getElementById('fieldFormTipe').value = 'text';
+            document.getElementById('fieldFormOpsi').value = '';
+            document.getElementById('fieldFormPlaceholder').value = '';
+            document.getElementById('fieldFormUrutan').value = '0';
+            document.getElementById('fieldFormRequired').checked = true;
+            document.getElementById('opsiFieldGroup').style.display = 'none';
+            document.getElementById('fieldFormModal').classList.add('active');
+        }
+
+        function editField(id, label, tipe, required, urutan, placeholder, opsi) {
+            document.getElementById('fieldFormModalTitle').textContent = 'Edit Field';
+            document.getElementById('fieldFormId').value = id;
+            document.getElementById('fieldFormLabel').value = label;
+            document.getElementById('fieldFormTipe').value = tipe;
+            document.getElementById('fieldFormRequired').checked = required;
+            document.getElementById('fieldFormUrutan').value = urutan;
+            document.getElementById('fieldFormPlaceholder').value = placeholder;
+            if (opsi) {
+                try { document.getElementById('fieldFormOpsi').value = JSON.parse(opsi).join('\n'); }
+                catch(e) { document.getElementById('fieldFormOpsi').value = opsi; }
+            } else document.getElementById('fieldFormOpsi').value = '';
+            document.getElementById('opsiFieldGroup').style.display = tipe === 'select' ? 'block' : 'none';
+            document.getElementById('fieldFormModal').classList.add('active');
+        }
+
+        function toggleOpsiField() {
+            document.getElementById('opsiFieldGroup').style.display = document.getElementById('fieldFormTipe').value === 'select' ? 'block' : 'none';
+        }
+
+        function submitFieldForm() {
+            var label = document.getElementById('fieldFormLabel').value.trim();
+            var tipe = document.getElementById('fieldFormTipe').value;
+            var required = document.getElementById('fieldFormRequired').checked;
+            var urutan = parseInt(document.getElementById('fieldFormUrutan').value) || 0;
+            var placeholder = document.getElementById('fieldFormPlaceholder').value.trim();
+            var opsiRaw = document.getElementById('fieldFormOpsi').value.trim();
+            if (!label) { showToast('Label wajib diisi', 'error'); return; }
+            var body = { label: label, tipe: tipe, required: required, urutan: urutan, placeholder: placeholder };
+            if (tipe === 'select' && opsiRaw) {
+                body.opsi = JSON.stringify(opsiRaw.split('\n').map(function(s) { return s.trim(); }).filter(Boolean));
+            }
+            var editingId = document.getElementById('fieldFormId').value;
+            var promise;
+            if (editingId) {
+                promise = fetch('/api/v1/admin/fields/' + editingId, { method: 'PUT', headers: authHeaders, body: JSON.stringify(body) });
+            } else {
+                promise = fetch('/api/v1/admin/kategori/' + currentKonfigurasiformKategoriId + '/fields', { method: 'POST', headers: authHeaders, body: JSON.stringify(body) });
+            }
+            promise.then(function(r) {
+                if (r.ok) { closeModal('fieldFormModal'); loadFieldsForKategori(); showToast('Field berhasil disimpan', 'success'); }
+                else showToast('Gagal menyimpan field', 'error');
+            }).catch(function() { showToast('Gagal menyimpan field', 'error'); });
+        }
+
+        function deleteField(id) {
+            if (!confirm('Hapus field ini?')) return;
+            fetch('/api/v1/admin/fields/' + id, { method: 'DELETE', headers: authHeaders })
+            .then(function(r) {
+                if (r.ok) { loadFieldsForKategori(); showToast('Field berhasil dihapus', 'success'); }
+                else showToast('Gagal menghapus field', 'error');
+            }).catch(function() { showToast('Gagal menghapus field', 'error'); });
+        }
+
+        // ---- Events ----
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
+        document.addEventListener('click', function(e) {
+            var dd = document.getElementById('notifDropdown');
+            if (dd.style.display === 'block' && !e.target.closest('[onclick*="toggleNotifDropdown"]') && !e.target.closest('#notifDropdown')) {
+                dd.style.display = 'none';
+            }
+        });
+
+        // ---- Init ----
+        loadDashboard();
+        setInterval(loadDashboard, 60000);
+    </script>
+    <div id="toastContainer"></div>
+    <script src="/js/app.js"></script>
+</body>
+</html>

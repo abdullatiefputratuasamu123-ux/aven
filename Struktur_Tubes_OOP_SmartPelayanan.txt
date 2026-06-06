@@ -1,0 +1,551 @@
+================================================================================
+        STRUKTUR LENGKAP TUBES OOP - SISTEM PELAYANAN MASYARAKAT
+                         (SmartPelayanan)
+================================================================================
+
+JUDUL: SISTEM PELAYANAN MASYARAKAT (SmartPelayanan)
+Mata Kuliah: IFB-202 Pemrograman Berbasis Objek
+Kelompok: 5
+Dosen: Dr. Uung Ungkawa, S.T., M.T.
+
+================================================================================
+                        DAFTAR ISI / SUBBAB
+================================================================================
+
+HALAMAN DEPAN:
+- Cover (Judul, Nama Kelompok, Dosen, Institusi, Tahun)
+- Kata Pengantar
+- Daftar Isi
+
+================================================================================
+BAB I: PENDAHULUAN
+================================================================================
+
+1.1 Latar Belakang
+    - Perkembangan teknologi informasi dan komunikasi
+    - Dampak signifikan dalam bidang pelayanan kesehatan
+    - Pemanfaatan teknologi digital untuk pengelolaan data
+    - Permasalahan pelayanan publik yang masih manual
+    - Kebutuhan sistem pelayanan masyarakat berbasis web
+
+1.2 Rumusan Masalah
+    - Bagaimana merancang sistem pelayanan masyarakat berbasis web?
+    - Bagaimana mengelola data pengaduan dan layanan administrasi?
+    - Bagaimana menyediakan fitur pendaftaran pelayanan secara online?
+    - Bagaimana menyajikan informasi status layanan kepada masyarakat?
+
+1.3 Tujuan Penelitian
+    - Merancang sistem pelayanan masyarakat berbasis web
+    - Mengelola data pengaduan dan layanan administrasi terintegrasi
+    - Mengembangkan fitur pendaftaran pelayanan online
+    - Menyediakan informasi status layanan secara efektif
+
+1.4 Manfaat Penelitian
+    - Manfaat bagi Rumah Sakit
+    - Manfaat bagi Masyarakat
+    - Manfaat bagi Pengembang
+
+================================================================================
+BAB II: LANDASAN TEORI
+================================================================================
+
+2.1 Object-Oriented Programming (OOP)
+    - Konsep dasar OOP
+    - Keuntungan menggunakan OOP
+
+2.2 Encapsulation
+    - Pengertian encapsulation
+    - Contoh Penerapan dalam sistem
+
+2.3 Inheritance
+    - Pengertian inheritance
+    - Contoh Penerapan (Admin mewarisi User)
+
+2.4 Polymorphism
+    - 2.4.1 Overloading
+      * Pengertian overloading
+      * Contoh: method tambahDonation dengan parameter berbeda
+    - 2.4.2 Overriding
+      * Pengertian overriding
+      * Contoh: method login() pada Admin dan Masyarakat
+
+2.5 Abstraction
+    - Pengertian abstraction
+    - Contoh: interface DonationService
+
+    2.5.1 Interface
+        - Pengertian interface
+        - Contoh: DonationService interface
+
+    2.5.2 Abstract Class
+        - Pengertian abstract class
+        - Contoh: class User sebagai abstract class
+
+    2.5.3 Exception Handling
+        - Pengertian exception handling
+        - Mekanisme try-catch
+
+2.6 Bahasa Pemrograman Java
+    - Karakteristik Java
+    - Alasan menggunakan Java
+
+2.7 Spring Boot
+    - Pengertian Spring Boot
+    - Keuntungan menggunakan Spring Boot
+
+2.8 Spring Data JPA
+    - Pengertian Spring Data JPA
+    - Keuntungan menggunakan JPA
+
+2.9 REST API
+    - Pengertian REST API
+    - HTTP Methods (GET, POST, PUT, DELETE)
+    - Contoh Penerapan endpoint
+
+2.10 Database (MySQL)
+    - Alasan menggunakan MySQL
+    - Data yang disimpan:
+      * Data pengguna (users)
+      * Data donor (donor)
+      * Data riwayat donor (donation)
+      * Data lokasi instansi pelayanan (location)
+      * Data permohonan layanan (blood_request)
+
+2.11 Deployment
+    - Cloudflare Tunnel
+    - Mini PC dengan Proxmox
+    - STB (Set Top Box) dengan Debian
+
+================================================================================
+BAB III: PERANCANGAN SISTEM
+================================================================================
+
+3.1 Studi Kasus
+    - Sistem Pelayanan Masyarakat (SmartPelayanan)
+    - Permasalahan pelayanan administrasi yang masih manual
+    - Kebutuhan sistem terpadu dalam satu platform
+
+3.2 Fitur Aplikasi
+    3.2.1 Fitur Autentikasi
+          - Login dan registrasi pengguna
+          - Role-based access (Admin, User)
+
+    3.2.2 Fitur Manajemen Data Donor
+          - CRUD data donor
+
+    3.2.3 Fitur Pencarian Lokasi
+          - Pencarian lokasi pelayanan
+
+    3.2.4 Fitur Manajemen Stok Darah
+          - Pengelolaan stok darah
+
+    3.2.5 Fitur Riwayat Pelayanan
+          - Pencatatan riwayat pelayanan
+
+    3.2.6 Fitur Permohonan Layanan
+          - Pengajuan permohonan layanan
+
+    3.2.7 Fitur Status Pelayanan
+          - Status: Pending, Diproses, Selesai
+          - Pemantauan status real-time
+
+    3.2.8 Fitur Riwayat Pelayanan
+          - Pencatatan aktivitas pelayanan
+
+    3.2.9 Fitur Pengaduan Masyarakat
+          - Penyampaian keluhan, kritik, saran
+          - Pengelolaan oleh Admin
+
+    3.2.10 Fitur Riwayat Pendonor
+          - Pencatatan aktivitas donor
+          - Data: tanggal donor, lokasi, jumlah darah, status
+
+3.3 Desain Database
+
+    3.3.1 ERD (Entity Relationship Diagram)
+          *** SCREENSHOT/FOTO: image2.jpg ***
+          (Diagram ERD menunjukkan entitas: Users, Donor, Location,
+           Blood_Request, Blood_Stock, Service_History, Complaint, Donation
+           beserta hubungan antar entitas)
+
+    3.3.2 TRD (Table Relationship Diagram)
+          *** SCREENSHOT/FOTO: image3.png ***
+          (Diagram TRD menunjukkan struktur tabel dengan PK, FK,
+           atribut, datatype, length, allow null, default, comment)
+
+    3.3.3 Spesifikasi Tabel Database:
+          - Tabel Users (id_user, name, email, password, role, phone)
+          - Tabel Donor (id_donor, user_id, nama_ayah, nama_ibu, gender,
+                         golongan_darah, alamat)
+          - Tabel Lokasi (id_location, name, address, city, latitude, longitude)
+          - Tabel Stok Darah (id_stock, location_id, blood_type, quantity)
+          - Tabel Request Darah (id_request, user_id, location_id, blood_type,
+                                 quantity, status, created_at)
+          - Tabel Riwayat Pelayanan (id_history, request_id, status, updated_at)
+          - Tabel Komplain (id_complaint, user_id, message, status, created_at)
+          - Tabel Donasi (id_donation, donor_id, location_id, tanggal_donor,
+                          jumlah_darah)
+
+3.4 Desain OOP & Rancangan API
+
+    3.4.1 Class Diagram
+          *** SCREENSHOT/FOTO: image4.jpg ***
+          (Diagram kelas lengkap menunjukkan:
+           - Entity classes: User, Admin, Donor, Donation, Lokasi,
+             Request Darah, Riwat Pelayanan
+           - Controller classes: UserController, DonorController,
+             DonationController, LocationController, BloodRequestController,
+             ServiceHistoryController
+           - Service classes: UserService, DonorService, DonationService,
+             LocationService, BloodRequestService, ServiceHistoryService
+           - Repository interfaces: UserRepository, DonorRepository,
+             DonationRepository, LocationRepository, BloodRequestRepository,
+             ServiceHistoryRepository
+           - Hubungan: Inheritance, Association, Composition)
+
+    3.4.2 Hubungan antar Class
+          - Inheritance (Admin terhadap User)
+          - Association antara User dan Donor (1:1)
+          - Association antara Donor dan Donation (1:N)
+          - Association antara Donation dan Location (N:1)
+          - Association antara User dan BloodRequest (1:N)
+          - Composition antara BloodRequest dan ServiceHistory
+
+    3.4.3 Identifikasi Layer Sistem
+          - @Entity (Representasi database)
+          - @Repository (Akses data)
+          - @Service (Logika bisnis)
+          - @RestController (Endpoint API)
+
+3.5 Rancangan REST API
+    *** SCREENSHOT/FOTO: image5.jpg ***
+    (Diagram endpoint API menunjukkan base URL dan seluruh endpoint)
+
+    Endpoint yang tersedia:
+    1. Users API
+       - GET    /api/users           (ambil semua user)
+       - GET    /api/users/{id}      (ambil user by ID)
+       - POST   /api/users           (tambah user)
+       - PUT    /api/users/{id}      (update user)
+       - DELETE /api/users/{id}      (hapus user)
+
+    2. Donor API
+       - GET    /api/donor           (ambil semua donor)
+       - GET    /api/donor/{id}      (ambil donor by ID)
+       - POST   /api/donor           (tambah donor)
+       - PUT    /api/donor/{id}      (update donor)
+       - DELETE /api/donor/{id}      (hapus donor)
+
+    3. Donation API
+       - GET    /api/donation              (ambil semua donasi)
+       - GET    /api/donation/{id}         (detail donasi)
+       - POST   /api/donation              (tambah donasi)
+       - GET    /api/donation/donor/{id}   (riwayat donasi per donor)
+
+    4. Request Darah API
+       - GET    /api/request         (ambil semua permohonan)
+       - GET    /api/request/{id}    (detail request)
+       - POST   /api/request         (buat permohonan)
+       - PUT    /api/request/{id}    (update status)
+       - DELETE /api/request/{id}    (hapus request)
+
+    5. Location API
+       - GET    /api/location        (ambil semua lokasi)
+       - GET    /api/location/{id}   (detail lokasi)
+       - POST   /api/location        (tambah lokasi)
+       - PUT    /api/location/{id}   (update lokasi)
+       - DELETE /api/location/{id}   (hapus lokasi)
+
+    6. Stock Darah API
+       - GET    /api/stock           (ambil semua stok)
+       - GET    /api/stock/{id}      (detail stok)
+       - PUT    /api/stock/{id}      (update stok)
+
+    7. Complaint API
+       - GET    /api/complaint       (ambil semua keluhan)
+       - POST   /api/complaint       (tambah keluhan)
+       - DELETE /api/complaint/{id}  (hapus keluhan)
+
+    8. Service History API
+       - GET    /api/history                (ambil riwayat)
+       - GET    /api/history/{id}           (detail riwayat)
+       - POST   /api/history                (tambah riwayat)
+       - GET    /api/history/request/{id}   (riwayat per request)
+
+================================================================================
+BAB IV: IMPLEMENTASI SISTEM
+================================================================================
+
+4.1 Instalasi dan Konfigurasi
+    - Instalasi Java Development Kit (JDK)
+    - Instalasi Spring Boot
+    - Konfigurasi MySQL Database
+
+4.2 Implementasi Entity dan Repository
+    - Implementasi class User, Admin, Donor
+    - Implementasi class Donation, Location, BloodRequest
+    - Implementasi class ServiceHistory, Complaint
+    - Implementasi Repository untuk setiap entity
+
+4.3 Implementasi Service Layer
+    - Implementasi business logic untuk setiap modul
+    - Implementasi DTO (Data Transfer Object)
+
+4.4 Implementasi Controller Layer
+    - Implementasi REST Controller untuk setiap endpoint
+    - Implementasi validasi input
+
+4.5 Implementasi REST API
+    - Pengujian endpoint menggunakan Postman
+    - GET untuk membaca data
+    - POST untuk menambah data
+    - PUT untuk memperbarui data
+    - DELETE untuk menghapus data
+
+4.6 Implementasi Layered Architecture
+    - Controller Layer (menerima request)
+    - Service Layer (logika bisnis)
+    - Repository Layer (akses database via JPA)
+    - Database Layer (penyimpanan data)
+
+4.7 Implementasi Exception Handling
+    - Mekanisme try-catch
+    - Custom exception
+    - Penanganan: data tidak ditemukan, input tidak valid,
+      kesalahan penyimpanan database
+
+4.8 Hasil Implementasi Sistem
+    - Fitur autentikasi pengguna
+    - Manajemen data donor
+    - Pengelolaan lokasi donor darah
+    - Manajemen stok darah
+    - Permintaan darah
+    - Pengaduan masyarakat
+    - Riwayat pelayanan
+    - Pencatatan aktivitas donor darah
+
+================================================================================
+BAB V: DEPLOYMENT DAN CLOUDFLARE TUNNEL
+================================================================================
+
+5.1 Tujuan Deployment
+    - Penerapan aplikasi ke lingkungan server
+    - Akses online melalui jaringan internet
+
+5.2 Persiapan Deployment
+    - Konfigurasi server
+    - Persiapan environment
+
+5.3 Konfigurasi Cloudflare Tunnel
+    - Instalasi cloudflared
+    - Konfigurasi tunnel
+
+5.4 Proses Deployment
+    - Upload aplikasi ke server
+    - Konfigurasi database di server
+
+5.5 Pengujian Setelah Deployment
+    - Pengujian akses dari berbagai perangkat
+    - Pengujian seluruh fitur
+
+5.6 Langkah-langkah Cloudflare Tunnel
+    - Instalasi cloudflared pada server
+    - Login ke akun Cloudflare
+    - Membuat tunnel baru
+    - Menghubungkan tunnel dengan aplikasi Spring Boot
+    - Menjalankan tunnel
+
+5.7 URL Publik Sistem
+    - https://....................................
+
+5.8 Hasil Deployment
+    - Akses URL publik
+    - Seluruh endpoint REST API dapat digunakan
+    - Pengujian menggunakan Postman
+
+5.9 Evaluasi Deployment
+    - Aplikasi dapat diakses secara online
+    - Tidak memerlukan port forwarding
+    - Keamanan melalui jaringan Cloudflare
+    - Kemudahan konfigurasi dan pemeliharaan
+
+================================================================================
+BAB VI: PENGUJIAN SISTEM
+================================================================================
+
+6.1 Tujuan Pengujian
+    - Memastikan seluruh fitur berjalan sesuai kebutuhan
+    - Pengujian menggunakan Postman
+
+6.2 Pengujian Login dan Registrasi
+    - Registrasi pengguna baru
+    - Login dengan akun yang terdaftar
+    - *** SCREENSHOT: Hasil pengujian login/registrasi di Postman ***
+
+6.3 Pengujian Data Donor
+    - Penambahan data donor baru
+    - Menampilkan data donor
+    - *** SCREENSHOT: Hasil pengujian CRUD donor di Postman ***
+
+6.4 Pengujian Lokasi
+    - Pengelolaan data lokasi
+    - *** SCREENSHOT: Hasil pengujian lokasi di Postman ***
+
+6.5 Pengujian Stok Darah
+    - Pengelolaan stok darah
+    - *** SCREENSHOT: Hasil pengujian stok darah di Postman ***
+
+6.6 Pengujian Permohonan Darah
+    - Pembuatan permohonan
+    - Update status permohonan
+    - *** SCREENSHOT: Hasil pengujian request darah di Postman ***
+
+6.7 Pengujian Pengaduan
+    - Pengiriman pengaduan
+    - Pengelolaan pengaduan oleh admin
+    - *** SCREENSHOT: Hasil pengujian pengaduan di Postman ***
+
+6.8 Pengujian Riwayat
+    - Pencatatan riwayat pelayanan
+    - *** SCREENSHOT: Hasil pengujian riwayat di Postman ***
+
+================================================================================
+BAB VII: PENUTUP
+================================================================================
+
+7.1 Kesimpulan
+    - Sistem berhasil dirancang dan diimplementasikan
+    - Menggunakan Spring Boot, Spring Data JPA, REST API, MySQL
+    - Fitur lengkap: autentikasi, donor, lokasi, stok, permohonan,
+      pengaduan, riwayat
+
+7.2 Saran
+    - Pengembangan lebih lanjut
+    - Pengembangan aplikasi mobile (Android/iOS)
+    - Peningkatan fitur dan keamanan
+
+================================================================================
+                    DAFTAR FOTO/SCREENSHOT YANG HARUS ADA
+================================================================================
+
+1. image1.png - LOGO/ICON
+   (Logo institusi atau aplikasi - desain geometris segitiga dalam
+    lingkaran dalam belah ketupat)
+
+2. image2.jpg - ERD (ENTITY RELATIONSHIP DIAGRAM)
+   (Gambar 3.3.1 - Diagram ERD Donor Darah)
+   Menunjukkan:
+   - Entitas: Donor, Users, Komplain, Request Darah, Riwayat Pelayanan,
+     Donation, Lokasi, Stock Darah
+   - Hubungan antar entitas dengan kardinalitas (1..1, 0..*, 1..*)
+   - Label relasi: memiliki, membuat, mengajukan, memiliki riwayat,
+     melayani, memiliki
+
+3. image3.png - TRD (TABLE RELATIONSHIP DIAGRAM)
+   (Gambar 3.3.2 - Diagram TRD Donor Darah)
+   Menunjukkan:
+   - Struktur tabel dengan kolom: Name, Datatype, Length, Allow Null,
+     Default, Comment
+   - PK (Primary Key) dan FK (Foreign Key)
+   - Tabel: User, Donor, Request Darah, Komplain, Riwayat Pelayanan,
+     Lokasi, Stok Darah, Donation
+
+4. image4.jpg - CLASS DIAGRAM
+   (Gambar 3.4.1 - Class Diagram Donor Darah)
+   Menunjukkan:
+   - Entity classes: User, Admin, Donor, Donation, Lokasi, Request Darah,
+     Riwat Pelayanan
+   - Controller classes: UserController, DonorController, DonationController,
+     LocationController, BloodRequestController, ServiceHistoryController
+   - Service classes: UserService, DonorService, DonationService,
+     LocationService, BloodRequestService, ServiceHistoryService
+   - Repository interfaces: UserRepository, DonorRepository, DonationRepository,
+     LocationRepository, BloodRequestRepository, ServiceHistoryRepository
+   - Hubungan: Inheritance, Association, Composition
+
+5. image5.jpg - DIAGRAM ENDPOINT REST API
+   Menunjukkan:
+   - Base URL: api/
+   - User Endpoints: GET, POST, PUT, DELETE /api/users
+   - Donor Endpoints: GET, POST, PUT, DELETE /api/donor
+   - Donation Endpoints: GET, POST /api/donation
+   - Lokasi Endpoints: GET, POST, PUT, DELETE /api/lokasi
+   - Request Darah Endpoints: GET, POST, PUT, DELETE /api/requestdarah
+
+================================================================================
+                    SCREENSHOT TAMBAHAN YANG DIPERLUKAN
+================================================================================
+
+6.  SCREENSHOT: HALAMAN LOGIN APLIKASI
+    (Tampilan form login di browser)
+
+7.  SCREENSHOT: HALAMAN REGISTRASI APLIKASI
+    (Tampilan form registrasi di browser)
+
+8.  SCREENSHOT: DASHBOARD ADMIN
+    (Tampilan dashboard setelah login sebagai admin)
+
+9.  SCREENSHOT: DASHBOARD USER/MASYARAKAT
+    (Tampilan dashboard setelah login sebagai user)
+
+10. SCREENSHOT: MANAJEMEN DATA DONOR
+    (Tampilan CRUD data donor)
+
+11. SCREENSHOT: MANAJEMEN LOKASI
+    (Tampilan CRUD data lokasi)
+
+12. SCREENSHOT: MANAJEMEN STOK DARAH
+    (Tampilan pengelolaan stok darah)
+
+13. SCREENSHOT: FORM PERMOHONAN LAYANAN
+    (Tampilan pengajuan permohonan darah)
+
+14. SCREENSHOT: STATUS PERMOHONAN
+    (Tampilan pemantauan status permohonan)
+
+15. SCREENSHOT: FORM PENGADUAN
+    (Tampilan pengiriman pengaduan masyarakat)
+
+16. SCREENSHOT: RIWAYAT PELAYANAN
+    (Tampilan riwayat pelayanan)
+
+17. SCREENSHOT: HASIL PENGUJIAN POSTMAN
+    (Hasil pengujian setiap endpoint API menggunakan Postman)
+
+18. SCREENSHOT: HASIL DEPLOYMENT DI BROWSER
+    (Akses aplikasi melalui URL publik Cloudflare Tunnel)
+
+19. SCREENSHOT: PROSES CLOUDFLARE TUNNEL
+    (Terminal/command prompt saat menjalankan cloudflared)
+
+20. SCREENSHOT: DATABASE MySQL
+    (Tampilan database di phpMyAdmin atau MySQL Workbench)
+
+================================================================================
+                        CATATAN TAMBAHAN
+================================================================================
+
+- Seluruh gambar/diagram harus memiliki nomor gambar dan caption
+- Format penulisan gambar: "Gambar X.Y.Z Judul Gambar"
+- Contoh: "Gambar 3.3.1 ERD Donor Darah"
+- Screenshot pengujian harus menunjukkan request dan response
+- Screenshot aplikasi harus menunjukkan URL di browser
+- Pastikan resolusi screenshot jelas dan terbaca
+
+================================================================================
+                    RINGKASAN STRUKTUR DOKUMEN
+================================================================================
+
+BAB I  : PENDAHULUAN (4 subbab)
+BAB II : LANDASAN TEORI (11 subbab)
+BAB III: PERANCANGAN SISTEM (5 subbab dengan banyak sub-sub)
+BAB IV : IMPLEMENTASI SISTEM (8 subbab)
+BAB V  : DEPLOYMENT DAN CLOUDFLARE TUNNEL (9 subbab)
+BAB VI : PENGUJIAN SISTEM (8 subbab)
+BAB VII: PENUTUP (2 subbab)
+
+TOTAL GAMBAR/SCREENSHOT YANG HARUS ADA: Minimal 20 gambar
+- 5 gambar dari dokumen asli (ERD, TRD, Class Diagram, API Diagram, Logo)
+- 15+ screenshot tambahan (aplikasi, Postman, deployment, database)
+
+================================================================================
