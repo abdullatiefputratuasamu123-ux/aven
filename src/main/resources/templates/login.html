@@ -65,26 +65,6 @@
             <i class="fas fa-pen"></i> Laporkan Masalah Tanpa Login
         </a>
 
-        <div class="test-accounts">
-            <h4>Akun Demo</h4>
-            <div class="account-grid">
-                <div class="account-btn" onclick="fillLogin('admin@smartpelayanan.com', 'admin123')">
-                    <div class="role">👤 Admin</div>
-                    <div class="email">admin@smartpelayanan.com</div>
-                    <div class="password">admin123</div>
-                </div>
-                <div class="account-btn" onclick="fillLogin('warga@gmail.com', 'warga123')">
-                    <div class="role">👥 Warga 1</div>
-                    <div class="email">warga@gmail.com</div>
-                    <div class="password">warga123</div>
-                </div>
-                <div class="account-btn" onclick="fillLogin('warga2@gmail.com', 'warga123')">
-                    <div class="role">👥 Warga 2</div>
-                    <div class="email">warga2@gmail.com</div>
-                    <div class="password">warga123</div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -98,11 +78,6 @@
                 p.type = 'password';
                 i.className = 'far fa-eye right-icon';
             }
-        }
-
-        function fillLogin(email, password) {
-            document.getElementById('email').value = email;
-            document.getElementById('password').value = password;
         }
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
