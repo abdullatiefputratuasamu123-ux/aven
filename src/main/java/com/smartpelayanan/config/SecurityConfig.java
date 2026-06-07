@@ -48,7 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/api/v1/admin/**", "/api/v1/warga/**", "/api/v1/kategori/**",
                                 "/api/v1/notifikasi/**", "/api/v1/upload", "/api/v1/lampiran/**",
-                                "/api/v1/superadmin/**", "/api/v1/layanan/**",
+                                "/api/v1/layanan/**",
                                 "/api/v1/pengaduan/*/detail", "/api/v1/laporan/**").authenticated()
                         .anyRequest().permitAll()
                 )

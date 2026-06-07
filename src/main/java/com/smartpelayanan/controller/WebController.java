@@ -91,7 +91,7 @@ public class WebController {
     }
 
     private void notifyAdmins(String judul, String pesan, String tipe, String referensiId) {
-        List<User> admins = userRepository.findByRoleIn(Arrays.asList(RoleEnum.ADMIN, RoleEnum.SUPERADMIN));
+        List<User> admins = userRepository.findByRoleIn(Arrays.asList(RoleEnum.ADMIN));
         for (User admin : admins) {
             createNotifikasi(admin, judul, pesan, tipe, referensiId);
         }

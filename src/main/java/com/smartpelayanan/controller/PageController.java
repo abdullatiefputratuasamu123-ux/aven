@@ -21,11 +21,6 @@ public class PageController {
         return "public-pengaduan";
     }
 
-    @GetMapping("/superadmin/dashboard")
-    public String superadminDashboard() {
-        return "superadmin-dashboard";
-    }
-
     @GetMapping("/admin/dashboard")
     public String adminDashboard() {
         return "admin-dashboard";

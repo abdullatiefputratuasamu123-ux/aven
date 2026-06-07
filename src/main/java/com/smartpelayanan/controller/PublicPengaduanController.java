@@ -168,10 +168,10 @@ public class PublicPengaduanController {
                 }
             }
 
-            // Notify all ADMIN and SUPERADMIN
+            // Notify all ADMIN
             final Pengaduan savedPengaduan = pengaduan;
             List<User> admins = userRepository.findByRoleIn(
-                    Arrays.asList(RoleEnum.ADMIN, RoleEnum.SUPERADMIN));
+                    Arrays.asList(RoleEnum.ADMIN));
             for (User admin : admins) {
                 Notifikasi notif = new Notifikasi();
                 notif.setJudul("Pengaduan Publik Baru");
